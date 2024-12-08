@@ -64,7 +64,7 @@ source ~/.key-bindings.zsh
 alias cat="batcat"
 alias scat="batcat --style=plain --paging=never"
 
-# Neovim
+# neovim
 alias n="nvim"
 
 # clipboard
@@ -87,11 +87,17 @@ alias dtree="tree -L 3 -a -d -I '.git' --charset X "
 # lazygit
 alias lg="lazygit"
 
-# zoxide
-alias z="zoxide"
-
 # tmux
 alias tmux="tmux -f $TMUX_CONF"
+
+# zoxide
+alias nzo="~/scripts/zoxide_openfiles_nvim.sh"
+
+# ripgrep
+alias rg="ripgrep"
+
+# yazi
+alias y="yazi"
 
 # fzf Integration
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

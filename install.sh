@@ -6,6 +6,8 @@ echo "Installing Brew..."
 brew analytics off
 
 # Utilities
+brew install zsh
+brew install tldr
 brew install fzf
 brew install bat
 brew install fd
@@ -15,9 +17,9 @@ brew install luajit
 brew install luarocks
 brew install prettier
 brew install ripgrep
+brew install yazi
 
 ### Terminal
-brew install git
 brew install lazygit
 brew install tmux
 brew install neovim
