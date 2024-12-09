@@ -17,6 +17,20 @@ brew install zsh tldr fzf bat fd zoxide lua luajit luarocks prettier ripgrep yaz
 echo "Installing terminal tools..."
 brew install lazygit tmux neovim
 
+# Clone TPM if not present
+if [ ! -d "$HOME/.config/tmux/.tmux/plugins/tpm" ]; then
+  echo "Cloning TPM..."
+  git clone https://github.com/tmux-plugins/tpm "$HOME/.config/tmux/.tmux/plugins/tpm"
+else
+  echo "TPM is already installed."
+fi
+
+# Check and create $HOME/.local/bin if it doesn't exist
+if [ ! -d "$HOME/.local/bin" ]; then
+  echo "Creating $HOME/.local/bin directory..."
+  mkdir -p "$HOME/.local/bin"
+fi
+
 # Navigate to dotfiles directory
 if [ -d "$HOME/dotfiles" ]; then
   cd "$HOME/dotfiles" || exit
@@ -26,26 +40,12 @@ else
   echo "Directory $HOME/dotfiles not found. Skipping dotfiles setup."
 fi
 
-# Check and create $HOME/.local/bin if it doesn't exist
-if [ ! -d "$HOME/.local/bin" ]; then
-  echo "Creating $HOME/.local/bin directory..."
-  mkdir -p "$HOME/.local/bin"
-fi
-
 # Stow scripts
 if [ -d "$HOME/dotfiles/scripts" ]; then
   echo "Stowing scripts..."
   stow -t "$HOME/.local/bin/" scripts
 else
   echo "Scripts directory not found in dotfiles."
-fi
-
-# Clone TPM if not present
-if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
-  echo "Cloning TPM..."
-  git clone https://github.com/tmux-plugins/tpm "$HOME/.config/tmux/.tmux/plugins/tpm"
-else
-  echo "TPM is already installed."
 fi
 
 echo "Setup complete."
