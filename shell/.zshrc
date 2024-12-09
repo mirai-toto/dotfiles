@@ -10,7 +10,6 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git"
 export FZF_DEFAULT_OPTS="--height 50% --layout=default --border --color=hl:#2dd4bf"
 export FZF_TMUX_OPTS=" -p90%,70% "
-export TMUX_CONF=~/.config/tmux/.tmux.conf
 export EDITOR='nvim'
 
 # History Settings
@@ -60,6 +59,8 @@ source ~/.key-bindings.zsh
 
 #### Aliases ####
 
+alias ..="cd .."
+
 # batcat
 alias cat="batcat"
 alias scat="batcat --style=plain --paging=never"
@@ -78,7 +79,7 @@ alias v="fd --hidden --type file --exclude .git | fzf-tmux -p --reverse | xargs 
 
 # eza
 alias ls="eza --color=always --icons=always" 
-alias ll="ls -la"
+alias l="ls -la"
 
 # tree
 alias tree="tree -L 3 -a -I '.git' --charset X "
@@ -86,9 +87,6 @@ alias dtree="tree -L 3 -a -d -I '.git' --charset X "
 
 # lazygit
 alias lg="lazygit"
-
-# tmux
-alias tmux="tmux -f $TMUX_CONF"
 
 # zoxide
 alias nzo="zoxide_openfiles_nvim.sh"
@@ -109,7 +107,7 @@ eval "$(zoxide init zsh)"
 # Function to Start TMUX After Initialization
 zsh_after_init() {
   if [ -z "$TMUX" ] && [ "$USE_TMUX" = "true" ]; then
-    tmux -f $TMUX_CONF attach || tmux -f $TMUX_CONF new
+    tmux attach || tmux new
   fi
 }
 

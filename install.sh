@@ -18,9 +18,9 @@ echo "Installing terminal tools..."
 brew install lazygit tmux neovim
 
 # Clone TPM if not present
-if [ ! -d "$HOME/.config/tmux/.tmux/plugins/tpm" ]; then
+if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
   echo "Cloning TPM..."
-  git clone https://github.com/tmux-plugins/tpm "$HOME/.config/tmux/.tmux/plugins/tpm"
+  git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
 else
   echo "TPM is already installed."
 fi

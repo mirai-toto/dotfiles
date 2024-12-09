@@ -22,7 +22,9 @@ list_oldfiles() {
         --layout=default))
 
   # Open selected files in Neovim
-  [[ ${#files[@]} -gt 0 ]] && nvim "${files[@]}"
+  if [[ ${#files[@]} -gt 0 ]]; then
+    nvim "${files[@]}"
+  fi
 }
 
 # Call the function
