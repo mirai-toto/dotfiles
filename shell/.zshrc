@@ -72,7 +72,7 @@ alias cbi="win32yank.exe -i"
 alias cbo="win32yank.exe -o"
 
 # fzf 
-alias nlof="~/scripts/fzf_listoldfiles.sh"
+alias nlof="fzf_listoldfiles.sh"
 alias fman="compgen -c | fzf | xargs man"
 alias v="fd --hidden --type file --exclude .git | fzf-tmux -p --reverse | xargs nvim"
 
@@ -91,7 +91,7 @@ alias lg="lazygit"
 alias tmux="tmux -f $TMUX_CONF"
 
 # zoxide
-alias nzo="~/scripts/zoxide_openfiles_nvim.sh"
+alias nzo="zoxide_openfiles_nvim.sh"
 
 # ripgrep
 alias rg="ripgrep"
