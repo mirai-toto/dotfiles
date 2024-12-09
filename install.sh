@@ -7,15 +7,16 @@ if ! command -v brew &>/dev/null; then
 else
   echo "Homebrew is already installed."
 fi
-brew analytics off
+
+/home/linuxbrew/.linuxbrew/bin/brew analytics off
 
 # Utilities
 echo "Installing utilities..."
-brew install zsh tldr fzf bat fd zoxide lua luajit luarocks prettier ripgrep yazi stow
+/home/linuxbrew/.linuxbrew/bin/brew install zsh tldr fzf bat fd zoxide lua luajit luarocks prettier ripgrep yazi stow
 
 # Terminal tools
 echo "Installing terminal tools..."
-brew install lazygit tmux neovim
+/home/linuxbrew/.linuxbrew/bin/brew  install lazygit tmux neovim
 
 # Clone TPM if not present
 if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
