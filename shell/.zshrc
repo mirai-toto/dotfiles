@@ -3,12 +3,26 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+#### .profile ####
+source ~/.profile
+
+#### Key Bindings ####
+source ~/.key-bindings.zsh
+
+#### Aliases ####
+source ~/.aliases.sh
+
 # Environment Variables
+
+FZF_OPTS_WITH_BATCAT_AND_TREE="--preview 'if test -d {}; then tree -L 3 -a -I \".git\" --charset X {}; else bat --color always {}; fi'"
+
 export ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git"
 export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 export FZF_ALT_C_COMMAND="fd --type=d --hidden --strip-cwd-prefix --exclude .git"
-export FZF_DEFAULT_OPTS="--height 50% --layout=default --border --color=hl:#2dd4bf"
+export FZF_DEFAULT_OPTS=" --height 50% --layout=default --border --color=hl:#2dd4bf"
+export FZF_CTRL_T_OPTS="$FZF_OPTS_WITH_BATCAT_AND_TREE"
+export FZF_ALT_C_OPTS="$FZF_OPTS_WITH_BATCAT_AND_TREE"
 export FZF_TMUX_OPTS=" -p90%,70% "
 export EDITOR='nvim'
 
@@ -22,9 +36,6 @@ setopt hist_ignore_space
 setopt hist_ignore_all_dups
 setopt hist_save_no_dups
 setopt hist_find_no_dups
-
-# Initialization Scripts
-source ~/.profile
 
 # Zinit Setup (Download if missing)
 if [ ! -d "$ZINIT_HOME" ]; then
@@ -52,50 +63,6 @@ zstyle ':completion:*:messages' format '%d'
 zstyle ':completion:*:warnings' format "$fg[red]No matches for:$reset_color %d"
 zstyle ':completion:*:corrections' format '%B%d (errors: %e)%b'
 zstyle ':completion:*' group-name ''
-
-#### Key Bindings ####
-
-source ~/.key-bindings.zsh
-
-#### Aliases ####
-
-alias ..="cd .."
-
-# batcat
-alias cat="batcat"
-alias scat="batcat --style=plain --paging=never"
-
-# neovim
-alias n="nvim"
-
-# clipboard
-alias cbi="win32yank.exe -i"
-alias cbo="win32yank.exe -o"
-
-# fzf 
-alias nlof="fzf_listoldfiles.sh"
-alias fman="compgen -c | fzf | xargs man"
-alias v="fd --hidden --type file --exclude .git | fzf-tmux -p --reverse | xargs nvim"
-
-# eza
-alias ls="eza --color=always --icons=always" 
-alias l="ls -la"
-
-# tree
-alias tree="tree -L 3 -a -I '.git' --charset X "
-alias dtree="tree -L 3 -a -d -I '.git' --charset X "
-
-# lazygit
-alias lg="lazygit"
-
-# zoxide
-alias nzo="zoxide_openfiles_nvim.sh"
-
-# ripgrep
-alias rg="ripgrep"
-
-# yazi
-alias y="yazi"
 
 # fzf Integration
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
