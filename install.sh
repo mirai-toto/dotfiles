@@ -11,7 +11,7 @@ brew analytics off
 
 # Utilities
 echo "Installing utilities..."
-brew install zsh tldr fzf bat fd zoxide lua luajit luarocks prettier ripgrep yazi
+brew install zsh tldr fzf bat fd zoxide lua luajit luarocks prettier ripgrep yazi stow
 
 # Terminal tools
 echo "Installing terminal tools..."
