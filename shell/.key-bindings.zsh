@@ -48,7 +48,8 @@ bindkey ' ' magic-space # [Space] - don't do history expansion
 bindkey '\ew' kill-region            # [Esc-w] - Kill from the cursor to the mark
 bindkey '\el' 'ls\n'                 # [Esc-l] - run command: ls
 bindkey '^r' history-incremental-search-backward # [Ctrl-r] - Search backward incrementally
-
+bindkey '\^K' kill-line                            # [Ctrl-k] - Delete line forward from the cursor 
+ 
 # [Ctrl-x] [Ctrl-e]  Edit the current command line in $EDITOR
 autoload -U edit-command-line
 zle -N edit-command-line
