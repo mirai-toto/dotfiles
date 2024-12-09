@@ -26,6 +26,8 @@ export FZF_ALT_C_OPTS="$FZF_OPTS_WITH_BATCAT_AND_TREE"
 export FZF_TMUX_OPTS=" -p90%,70% "
 export EDITOR='nvim'
 
+export LANG=en_US.UTF-8
+
 # History Settings
 HISTSIZE=5000
 HISTFILE=~/.zsh_history

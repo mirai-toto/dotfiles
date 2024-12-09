@@ -36,3 +36,4 @@ alias rg="ripgrep"
 # yazi
 alias y="yazi"
 
+alias meteo="curl -s \"https://wttr.in/La%20Ciotat\""
