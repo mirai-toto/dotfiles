@@ -1,5 +1,10 @@
 #!/bin/bash
 
+# Add Homebrew to PATH
+if [ -d "/home/linuxbrew/.linuxbrew/bin" ]; then
+  export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
+fi
+
 # Homebrew
 echo "Installing Homebrew..."
 if ! command -v brew &>/dev/null; then
@@ -8,15 +13,15 @@ else
   echo "Homebrew is already installed."
 fi
 
-/home/linuxbrew/.linuxbrew/bin/brew analytics off
+brew analytics off
 
 # Utilities
 echo "Installing utilities..."
-/home/linuxbrew/.linuxbrew/bin/brew install zsh tldr fzf bat fd zoxide lua luajit luarocks prettier ripgrep yazi stow
+brew install zsh tldr fzf bat fd zoxide lua luajit luarocks prettier ripgrep yazi stow
 
 # Terminal tools
 echo "Installing terminal tools..."
-/home/linuxbrew/.linuxbrew/bin/brew  install lazygit tmux neovim
+brew install lazygit tmux neovim
 
 # Clone TPM if not present
 if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
