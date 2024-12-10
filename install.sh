@@ -3,17 +3,18 @@
 # Determine the directory of the script
 SCRIPT_DIR=$(dirname "$(realpath "$0")")
 
-# Add Homebrew to PATH
-if [ -d "/home/linuxbrew/.linuxbrew/bin" ]; then
-  export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
-fi
-
 # Homebrew
 echo "Installing Homebrew..."
 if ! command -v brew &>/dev/null; then
   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 else
   echo "Homebrew is already installed."
+fi
+
+# Add Homebrew to PATH
+if [ -d "/home/linuxbrew/.linuxbrew/bin" ]; then
+  echo "export PATH=\"/home/linuxbrew/.linuxbrew/bin:$PATH\"" >> "$HOME/.profile"
+  source "$HOME/.profile"
 fi
 
 brew analytics off
