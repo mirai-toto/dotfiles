@@ -3,6 +3,11 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+#### Shell Profile ####
+if [ -f ~/.profile ]; then 
+  source ~/.profile
+fi
+
 #### Key Bindings ####
 source ~/.key-bindings.zsh
 
@@ -13,8 +18,12 @@ source ~/.aliases.sh
 
 USE_TMUX=true
 export PATH="/home/wsl-user/.local/bin:$PATH"
-export JAVA_HOME="/usr/lib/jvm/java-21-openjdk-amd64"
-export PATH=$JAVA_HOME/bin:$PATH
+
+if [ -z $JAVA_HOME ]; then
+  export JAVA_HOME="/usr/lib/jvm/java-21-openjdk-amd64"
+  export PATH=$JAVA_HOME/bin:$PATH
+fi
+
 export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
 
 FZF_OPTS_WITH_BATCAT_AND_TREE="--preview 'if test -d {}; then tree -L 3 -a -I \".git\" --charset X {}; else bat --color always {}; fi'"

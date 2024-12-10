@@ -1,3 +1,9 @@
+myLsWidget() {
+    echo ""
+    ls
+}
+zle -N myLsWidget
+
 # Ensure terminal is in application mode when zle is active
 function zle-line-init() {
   echoti smkx
@@ -46,7 +52,7 @@ bindkey ' ' magic-space # [Space] - don't do history expansion
 
 # Region and line editing
 bindkey '\ew' kill-region            # [Esc-w] - Kill from the cursor to the mark
-bindkey '\el' 'ls\n'                 # [Esc-l] - run command: ls
+bindkey '\el' myLsWidget             # [Esc-l] - run command: ls
 bindkey '^r' history-incremental-search-backward # [Ctrl-r] - Search backward incrementally
 bindkey '\^K' kill-line                            # [Ctrl-k] - Delete line forward from the cursor 
  

@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Determine the directory of the script
+SCRIPT_DIR=$(dirname "$(realpath "$0")")
+
 # Add Homebrew to PATH
 if [ -d "/home/linuxbrew/.linuxbrew/bin" ]; then
   export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
@@ -17,7 +20,7 @@ brew analytics off
 
 # Utilities
 echo "Installing utilities..."
-brew install zsh tldr fzf bat fd zoxide lua luajit luarocks prettier ripgrep yazi stow
+brew install fastfetch zsh tldr fzf bat fd zoxide lua luajit luarocks prettier ripgrep yazi eza tree stow
 
 # Terminal tools
 echo "Installing terminal tools..."
@@ -37,17 +40,17 @@ if [ ! -d "$HOME/.local/bin" ]; then
   mkdir -p "$HOME/.local/bin"
 fi
 
-# Navigate to dotfiles directory
-if [ -d "$HOME/dotfiles" ]; then
-  cd "$HOME/dotfiles" || exit
+# Navigate to the dotfiles directory
+if [ -d "$SCRIPT_DIR" ]; then
+  cd "$SCRIPT_DIR" || exit
   echo "Stowing dotfiles..."
   stow -t ~ tmux shell
 else
-  echo "Directory $HOME/dotfiles not found. Skipping dotfiles setup."
+  echo "Directory $SCRIPT_DIR not found. Skipping dotfiles setup."
 fi
 
 # Stow scripts
-if [ -d "$HOME/dotfiles/scripts" ]; then
+if [ -d "$SCRIPT_DIR/scripts" ]; then
   echo "Stowing scripts..."
   stow -t "$HOME/.local/bin/" scripts
 else
