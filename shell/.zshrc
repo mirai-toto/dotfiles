@@ -3,9 +3,6 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-#### .profile ####
-source ~/.profile
-
 #### Key Bindings ####
 source ~/.key-bindings.zsh
 
@@ -13,6 +10,12 @@ source ~/.key-bindings.zsh
 source ~/.aliases.sh
 
 # Environment Variables
+
+USE_TMUX=true
+export PATH="/home/wsl-user/.local/bin:$PATH"
+export JAVA_HOME="/usr/lib/jvm/java-21-openjdk-amd64"
+export PATH=$JAVA_HOME/bin:$PATH
+export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
 
 FZF_OPTS_WITH_BATCAT_AND_TREE="--preview 'if test -d {}; then tree -L 3 -a -I \".git\" --charset X {}; else bat --color always {}; fi'"
 
@@ -69,6 +72,9 @@ zstyle ':completion:*' group-name ''
 # fzf Integration
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 eval "$(fzf --zsh)"
+
+# Homebrew Integration
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 # zoxide Integration
 eval "$(zoxide init zsh)"
