@@ -3,6 +3,9 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+#### profile ####
+[[ -f ~/.profile ]] && source ~/.profile
+
 #### Key Bindings ####
 source ~/.key-bindings.zsh
 
