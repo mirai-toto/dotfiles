@@ -16,7 +16,7 @@ source ~/.aliases.sh
 
 USE_TMUX=true
 
-export PATH="/home/wsl-user/.local/bin:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
 export JAVA_HOME="/usr/lib/jvm/java-21-openjdk-amd64"
 export PATH=$JAVA_HOME/bin:$PATH
 export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
