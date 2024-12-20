@@ -16,6 +16,7 @@ source ~/.aliases.sh
 
 USE_TMUX=true
 
+export XDG_CONFIG_HOME="$HOME/.config"
 export PATH="$HOME/.local/bin:$PATH"
 export JAVA_HOME="/usr/lib/jvm/java-21-openjdk-amd64"
 export PATH=$JAVA_HOME/bin:$PATH
