@@ -8,8 +8,13 @@ alias scat="bat --style=plain --paging=never"
 alias n="nvim"
 
 # clipboard
-alias cbi="win32yank.exe -i"
-alias cbo="win32yank.exe -o"
+if command -v win32yank.exe >/dev/null 2>&1; then
+    alias cbi="win32yank.exe -i"
+    alias cbo="win32yank.exe -o"
+elif command -v xclip >/dev/null 2>&1; then
+    alias cbi="xclip -selection clipboard -in"
+    alias cbo="xclip -selection clipboard -out"
+fi
 
 # fzf 
 alias nlof="fzf_listoldfiles.sh"
