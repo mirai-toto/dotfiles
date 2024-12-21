@@ -26,7 +26,7 @@ brew analytics off
 
 # Utilities
 echo "Installing utilities..."
-brew install zsh tldr fzf bat fd zoxide lua luajit luarocks prettier ripgrep yazi stow eza lazygit tmux neovim
+brew install zsh tldr fzf bat fd zoxide lua luajit luarocks prettier ripgrep yazi stow eza lazygit tmux neovim xclip
 
 # Change default shell to Homebrew's Zsh
 if [ -x "/home/linuxbrew/.linuxbrew/bin/zsh" ]; then
