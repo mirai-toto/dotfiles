@@ -34,6 +34,7 @@ alias lg="lazygit"
 
 # zoxide
 alias nzo="zoxide_openfiles_nvim.sh"
+alias cd="z"
 
 # yazi
 alias y="yazi"
