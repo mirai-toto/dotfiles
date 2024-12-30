@@ -9,20 +9,20 @@ alias n="nvim"
 
 # clipboard
 if command -v win32yank.exe >/dev/null 2>&1; then
-    alias cbi="win32yank.exe -i"
-    alias cbo="win32yank.exe -o"
+  alias cbi="win32yank.exe -i"
+  alias cbo="win32yank.exe -o"
 elif command -v xclip >/dev/null 2>&1; then
-    alias cbi="xclip -selection clipboard -in"
-    alias cbo="xclip -selection clipboard -out"
+  alias cbi="xclip -selection clipboard -in"
+  alias cbo="xclip -selection clipboard -out"
 fi
 
-# fzf 
+# fzf
 alias nlof="fzf_listoldfiles.sh"
 alias fman="compgen -c | fzf | xargs man"
 alias v="fd --hidden --type file --exclude .git | fzf-tmux -p --reverse | xargs nvim"
 
 # eza
-alias ls="eza --color=always --icons=always" 
+alias ls="eza --color=always --icons=always"
 alias l="ls -la"
 
 # tree
