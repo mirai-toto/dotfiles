@@ -112,6 +112,16 @@ configure_locale() {
   fi
 }
 
+configure_wsl_terminal_profile() {
+  if [ -z "$WSL_DISTRO_NAME" ]; then
+    echo "Not running inside WSL. Skipping Windows Terminal profile configuration."
+    return
+  fi
+
+  WIN_SCRIPT_PATH=$(wslpath -w "$SCRIPT_DIR/update_terminal_profile.ps1")
+  powershell.exe -ExecutionPolicy Bypass -File "$WIN_SCRIPT_PATH" -ProfileName "$WSL_DISTRO_NAME"
+}
+
 print_completion_message() {
   echo -e "\033[31mTo apply the changes:\033[0m"
   echo -e "- Close and reopen your terminal. (This starts a new session.)"
@@ -126,4 +136,5 @@ change_default_shell_to_zsh
 stow_dotfiles
 install_tmux_plugins
 configure_locale
+configure_wsl_terminal_profile
 print_completion_message
