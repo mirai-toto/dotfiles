@@ -17,13 +17,32 @@ $json = Get-Content $settingsPath -Raw | ConvertFrom-Json
 
 foreach ($profile in $json.profiles.list) {
   if ($profile.name -eq $ProfileName) {
-    $profile.fontFace = $FontFace
-    $profile.colorScheme = $ColorScheme
-    $profile.useAcrylic = $UseAcrylic
-    $profile.opacity = $Opacity
+    # Set or add properties
+    if ($null -eq $profile.fontFace) {
+      $profile | Add-Member -MemberType NoteProperty -Name fontFace -Value $FontFace
+    } else {
+      $profile.fontFace = $FontFace
+    }
+
+    if ($null -eq $profile.colorScheme) {
+      $profile | Add-Member -MemberType NoteProperty -Name colorScheme -Value $ColorScheme
+    } else {
+      $profile.colorScheme = $ColorScheme
+    }
+
+    if ($null -eq $profile.useAcrylic) {
+      $profile | Add-Member -MemberType NoteProperty -Name useAcrylic -Value $UseAcrylic
+    } else {
+      $profile.useAcrylic = $UseAcrylic
+    }
+
+    if ($null -eq $profile.opacity) {
+      $profile | Add-Member -MemberType NoteProperty -Name opacity -Value $Opacity
+    } else {
+      $profile.opacity = $Opacity
+    }
   }
 }
 
 $json | ConvertTo-Json -Depth 100 | Set-Content $settingsPath
 Write-Host "Profile '$ProfileName' updated."
-
