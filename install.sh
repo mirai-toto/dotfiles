@@ -119,7 +119,7 @@ configure_wsl_terminal_profile() {
   fi
 
   WIN_SCRIPT_PATH=$(wslpath -w "$SCRIPT_DIR/update_terminal_profile.ps1")
-  powershell.exe -ExecutionPolicy Bypass -File "$WIN_SCRIPT_PATH" -ProfileName "$WSL_DISTRO_NAME"
+  powershell.exe -ExecutionPolicy Bypass -File "$WIN_SCRIPT_PATH" -ProfileName "$WSL_DISTRO_NAME" -User "$USER"
 }
 
 print_completion_message() {
