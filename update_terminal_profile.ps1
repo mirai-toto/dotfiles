@@ -1,10 +1,13 @@
 param (
-  [string]$ProfileName = "",
-  [string]$FontFace = "DroidSansM Nerd Font",
-  [string]$ColorScheme = "Dark+",
-  [int]$Opacity = 80,
-  [bool]$UseAcrylic = $true,
-  [string]$User = "root"
+  [string]$ProfileName,
+  [string]$FontFace,
+  [string]$ColorScheme,
+  [int]$Opacity,
+  [string]$BackgroundImage,
+  [float]$BackgroundImageOpacity,
+  [switch]$UseAcrylic,
+  [switch]$DisableBell,
+  [string]$User
 )
 
 $settingsPath = "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json"
@@ -16,13 +19,38 @@ if (-Not (Test-Path $settingsPath)) {
 
 $json = Get-Content $settingsPath -Raw | ConvertFrom-Json
 
+$defaultValues = @{
+  'font'                   = @{}
+  'colorScheme'            = $null
+  'useAcrylic'             = $false
+  'opacity'                = 100
+  'commandline'            = ""
+  'bellStyle'              = $null
+  'backgroundImage'        = ""
+  'backgroundImageOpacity' = 1
+}
+
 foreach ($profile in $json.profiles.list) {
   if ($profile.name -eq $ProfileName) {
-    $profile | Add-Member -NotePropertyName fontFace -NotePropertyValue $FontFace -Force
-    $profile | Add-Member -NotePropertyName colorScheme -NotePropertyValue $ColorScheme -Force
-    $profile | Add-Member -NotePropertyName useAcrylic -NotePropertyValue $UseAcrylic -Force
-    $profile | Add-Member -NotePropertyName opacity -NotePropertyValue $Opacity -Force
-    $profile | Add-Member -NotePropertyName commandline -NotePropertyValue "wsl -d $ProfileName -u $User --cd ~" -Force
+
+    # We generate each json object
+    foreach ($key in $defaultValues.Keys) {
+      if (-not $profile.$key) {
+        $profile | Add-Member -MemberType NoteProperty -Name $key -Value $defaultValues[$key] -Force
+      }
+    }
+
+    $profile.font.face   = $FontFace
+    $profile.colorScheme = $ColorScheme
+    $profile.useAcrylic  = $UseAcrylic.IsPresent
+    $profile.opacity     = $Opacity
+    $profile.commandline = "wsl -d $ProfileName -u $User --cd ~"
+    if ($DisableBell.IsPresent) {
+      $profile.bellStyle = "none"
+    }
+    $picturesPath = [Environment]::GetFolderPath("MyPictures")
+    $profile.backgroundImage = Join-Path $picturesPath $BackgroundImage
+    $profile.backgroundImageOpacity = $BackgroundImageOpacity
   }
 }
 

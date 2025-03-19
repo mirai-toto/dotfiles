@@ -118,8 +118,22 @@ configure_wsl_terminal_profile() {
     return
   fi
 
+  # Copy Background image for Windows Terminal
+  if [ -f "${SCRIPT_DIR}/background/WindowsTerminal_wallpaper.png" ]; then
+    WINDOWS_PICTURES_PATH=$(wslpath "$(powershell.exe '[Environment]::GetFolderPath("MyPictures")')")
+    cp "${SCRIPT_DIR}/background/WindowsTerminal_wallpaper.png" "${WINDOWS_PICTURES_PATH}/${WSL_DISTRO_NAME}_WindowsTerminal_wallpaper.png"
+  fi
+
   WIN_SCRIPT_PATH=$(wslpath -w "$SCRIPT_DIR/update_terminal_profile.ps1")
-  powershell.exe -ExecutionPolicy Bypass -File "$WIN_SCRIPT_PATH" -ProfileName "$WSL_DISTRO_NAME" -User "$USER"
+  powershell.exe -ExecutionPolicy Bypass -File "$WIN_SCRIPT_PATH" \
+    -ProfileName "$WSL_DISTRO_NAME" \
+    -FontFace "DroidSansM Nerd Font" \
+    -ColorScheme "Dark+" \
+    -Opacity 80 \
+    -UseAcrylic \
+    -BackgroundImage "${WSL_DISTRO_NAME}_WindowsTerminal_wallpaper.png" \
+    -BackgroundImageOpacity 0.2 \
+    -User "$USER"
 }
 
 print_completion_message() {
