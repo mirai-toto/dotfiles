@@ -56,6 +56,12 @@ source "${ZINIT_HOME}/zinit.zsh"
 # Plugins via Zinit
 zinit ice depth=1; zinit light romkatv/powerlevel10k
 zinit light zsh-users/zsh-syntax-highlighting
+
+zinit ice \
+    atclone'[[ ! -f src/_docker ]] && docker completion zsh > src/_docker' \
+    atpull'[[ ! -f src/_docker ]] && docker completion zsh > src/_docker' \
+    atload'[[ ! -L ~/.local/share/zinit/completions/_docker ]] && ln -s $PWD/src/_docker ~/.local/share/zinit/completions/_docker' \
+    as"completion"
 zinit light zsh-users/zsh-completions
 zinit light zsh-users/zsh-autosuggestions
 zinit light Aloxaf/fzf-tab
