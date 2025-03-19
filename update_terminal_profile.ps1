@@ -1,6 +1,6 @@
 param (
   [string]$ProfileName = "",
-  [string]$FontFace = "DroidSansMono Nerd Font",
+  [string]$FontFace = "DroidSansM Nerd Font",
   [string]$ColorScheme = "Dark+",
   [int]$Opacity = 80,
   [bool]$UseAcrylic = $true,
