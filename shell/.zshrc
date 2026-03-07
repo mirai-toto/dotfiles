@@ -6,6 +6,9 @@ fi
 #### profile ####
 [[ -f ~/.profile ]] && source ~/.profile
 
+#### Secrets ####
+[[ -f ~/.secrets ]] && source ~/.secrets
+
 #### Key Bindings ####
 source ~/.key-bindings.zsh
 

@@ -128,6 +128,16 @@ install_wt_settings() {
   uv tool install -e "$HOME/.local/src/wt-settings"
 }
 
+setup_secrets() {
+  if [ ! -f "$HOME/.secrets" ]; then
+    echo "Creating ~/.secrets from template..."
+    cp "$SCRIPT_DIR/shell/.secrets.example" "$HOME/.secrets"
+    echo "Fill in your secrets at ~/.secrets"
+  else
+    echo "~/.secrets already exists. Skipping."
+  fi
+}
+
 configure_wsl_terminal_profile() {
   if [ -z "$WSL_DISTRO_NAME" ]; then
     echo "Not running inside WSL. Skipping Windows Terminal profile configuration."
@@ -153,6 +163,7 @@ install_utilities
 change_default_shell_to_zsh
 stow_dotfiles
 install_tmux_plugins
+setup_secrets
 configure_locale
 install_wt_settings
 configure_wsl_terminal_profile
