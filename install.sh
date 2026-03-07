@@ -34,7 +34,7 @@ install_homebrew() {
 install_utilities() {
   install_homebrew
   echo "Installing utilities..."
-  brew install zsh tldr fzf bat fd zoxide lua luajit luarocks prettier ripgrep yazi stow eza lazygit tmux neovim xclip tree
+  brew install zsh tldr fzf bat fd zoxide lua luajit luarocks prettier ripgrep yazi stow eza lazygit tmux neovim xclip tree uv
 }
 
 change_default_shell_to_zsh() {
@@ -112,14 +112,32 @@ configure_locale() {
   fi
 }
 
+install_wt_settings() {
+  if [ -z "$WSL_DISTRO_NAME" ]; then
+    echo "Not running inside WSL. Skipping wt-settings installation."
+    return
+  fi
+
+  echo "Installing wt-settings..."
+  if [ ! -d "$HOME/.local/src/wt-settings" ]; then
+    mkdir -p "$HOME/.local/src"
+    git clone https://github.com/mirai-toto/wt-settings.git "$HOME/.local/src/wt-settings"
+  else
+    echo "wt-settings already cloned."
+  fi
+  uv tool install -e "$HOME/.local/src/wt-settings"
+}
+
 configure_wsl_terminal_profile() {
   if [ -z "$WSL_DISTRO_NAME" ]; then
     echo "Not running inside WSL. Skipping Windows Terminal profile configuration."
     return
   fi
 
-  WIN_SCRIPT_PATH=$(wslpath -w "$SCRIPT_DIR/update_terminal_profile.ps1")
-  powershell.exe -ExecutionPolicy Bypass -File "$WIN_SCRIPT_PATH" -ProfileName "$WSL_DISTRO_NAME" -User "$USER"
+  echo "Configuring Windows Terminal profile '$WSL_DISTRO_NAME'..."
+  wts appearance font "$WSL_DISTRO_NAME" --face "DroidSansMono Nerd Font"
+  wts appearance opacity "$WSL_DISTRO_NAME" 80 --acrylic
+  wts scheme apply "$WSL_DISTRO_NAME" "Dark+"
 }
 
 print_completion_message() {
@@ -136,5 +154,6 @@ change_default_shell_to_zsh
 stow_dotfiles
 install_tmux_plugins
 configure_locale
+install_wt_settings
 configure_wsl_terminal_profile
 print_completion_message

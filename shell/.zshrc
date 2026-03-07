@@ -20,6 +20,7 @@ export SHELL="/home/linuxbrew/.linuxbrew/bin/zsh"
 export XDG_CONFIG_HOME="$HOME/.config"
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
+export PATH="/snap/bin:$PATH"
 export EDITOR='nvim'
 export ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
 
