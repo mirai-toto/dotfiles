@@ -84,16 +84,10 @@ eval "$(zoxide init zsh)"
 
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
-# Function to Start TMUX After Initialization
-zsh_after_init() {
-  if [ -z "$TMUX" ] && [ "$USE_TMUX" = "true" ]; then
-    tmux attach || tmux new
-  fi
-}
-
-# Hook to Run the Function After Initialization
-autoload -Uz add-zsh-hook
-add-zsh-hook -Uz precmd zsh_after_init
-
 # Powerlevel10k Configuration
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+# Auto-attach to tmux on shell startup
+if [ -z "$TMUX" ] && [ "$USE_TMUX" = "true" ]; then
+  tmux attach || tmux new
+fi
