@@ -1,0 +1,15 @@
+[include]
+	path = ~/.gitconfig.local
+
+[core]
+	editor = nvim
+	excludesfile = ~/.gitignore_global
+
+[init]
+	defaultBranch = main
+
+[pull]
+	rebase = false
+
+[push]
+	autoSetupRemote = true

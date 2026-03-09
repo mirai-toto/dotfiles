@@ -79,13 +79,10 @@ zstyle ':completion:*:corrections' format '%B%d (errors: %e)%b'
 zstyle ':completion:*' group-name ''
 
 # fzf Integration
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 eval "$(fzf --zsh)"
 
 # zoxide Integration
 eval "$(zoxide init zsh)"
-
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 # Powerlevel10k Configuration
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh

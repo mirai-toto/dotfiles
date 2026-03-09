@@ -1,6 +1,10 @@
 {
   "extras": [
-
+    "extras/ai/claudecode",
+    "extras/lang/python",
+    "extras/lang/yaml",
+    "extras/lang/json",
+    "extras/git/diffview"
   ],
   "install_version": 8,
   "news": {

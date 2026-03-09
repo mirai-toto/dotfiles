@@ -34,7 +34,7 @@ install_homebrew() {
 install_utilities() {
   install_homebrew
   echo "Installing utilities..."
-  brew install zsh tldr fzf bat fd zoxide lua luajit luarocks prettier ripgrep yazi stow eza lazygit tmux neovim xclip tree uv
+  brew bundle --file="$SCRIPT_DIR/Brewfile"
 }
 
 change_default_shell_to_zsh() {
@@ -77,8 +77,9 @@ stow_dotfiles() {
   cd "$SCRIPT_DIR" || exit
   stow_path "tmux" "$HOME"
   stow_path "shell" "$HOME"
+  stow_path "git" "$HOME"
   stow_path "scripts" "$HOME/.local/bin"
-  stow_path "nvim" "$HOME/.config/nvim"
+  stow_path "nvim" "$HOME/.config"
 }
 
 setup_tmux_plugin_manager() {
@@ -138,6 +139,16 @@ setup_secrets() {
   fi
 }
 
+setup_git_local() {
+  if [ ! -f "$HOME/.gitconfig.local" ]; then
+    echo "Creating ~/.gitconfig.local from template..."
+    cp "$SCRIPT_DIR/git/.gitconfig.local.example" "$HOME/.gitconfig.local"
+    echo "Fill in your git identity at ~/.gitconfig.local"
+  else
+    echo "~/.gitconfig.local already exists. Skipping."
+  fi
+}
+
 configure_wsl_terminal_profile() {
   if [ -z "$WSL_DISTRO_NAME" ]; then
     echo "Not running inside WSL. Skipping Windows Terminal profile configuration."
@@ -164,6 +175,7 @@ change_default_shell_to_zsh
 stow_dotfiles
 install_tmux_plugins
 setup_secrets
+setup_git_local
 configure_locale
 install_wt_settings
 configure_wsl_terminal_profile
