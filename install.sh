@@ -56,6 +56,17 @@ change_default_shell_to_zsh() {
   fi
 }
 
+install_zinit() {
+  ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
+  if [ ! -f "$ZINIT_HOME/zinit.zsh" ]; then
+    echo "Installing zinit..."
+    mkdir -p "$(dirname "$ZINIT_HOME")"
+    git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
+  else
+    echo "zinit is already installed."
+  fi
+}
+
 apply_dotfiles() {
   echo "Applying dotfiles with chezmoi..."
   mkdir -p "$HOME/.config/chezmoi"
@@ -75,16 +86,6 @@ setup_tmux_plugin_manager() {
   fi
 }
 
-install_tmux_plugins() {
-  setup_tmux_plugin_manager
-  if [ -d "$HOME/.tmux/plugins/tpm" ]; then
-    echo "Installing TMUX plugins..."
-    "$HOME/.tmux/plugins/tpm/bin/install_plugins"
-    echo "TMUX plugins installed successfully."
-  else
-    echo "TPM is not installed. Skipping plugin installation."
-  fi
-}
 
 configure_locale() {
   echo "Configuring locale..."
@@ -149,7 +150,7 @@ ensure_local_bin
 install_utilities
 change_default_shell_to_zsh
 apply_dotfiles
-install_tmux_plugins
+setup_tmux_plugin_manager
 setup_secrets
 configure_locale
 install_wt_settings
