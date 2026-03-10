@@ -7,6 +7,7 @@ ensure_local_bin() {
     echo "Creating $HOME/.local/bin directory..."
     mkdir -p "$HOME/.local/bin"
   fi
+  export PATH="$HOME/.local/bin:$PATH"
 }
 
 install_homebrew() {
@@ -156,8 +157,9 @@ configure_wsl_terminal_profile() {
   fi
 
   echo "Configuring Windows Terminal profile '$WSL_DISTRO_NAME'..."
-  wts appearance font "$WSL_DISTRO_NAME" --face "DroidSansM Nerd Font Mono"
-  wts appearance opacity "$WSL_DISTRO_NAME" 80 --acrylic
+  wts profile font "$WSL_DISTRO_NAME" --face "DroidSansM Nerd Font Mono"
+  wts profile opacity "$WSL_DISTRO_NAME" 80 --acrylic
+  wts profile bell "$WSL_DISTRO_NAME" --disable
   wts scheme apply "$WSL_DISTRO_NAME" "Dark+"
 }
 

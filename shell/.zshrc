@@ -88,6 +88,6 @@ eval "$(zoxide init zsh)"
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 # Auto-attach to tmux on shell startup
-if [ -z "$TMUX" ] && [ "$USE_TMUX" = "true" ]; then
-  tmux attach || tmux new
+if [ -z "$TMUX" ] && [ "$USE_TMUX" = "true" ] && [[ -t 0 ]]; then
+  tmux attach 2>/dev/null || tmux new
 fi
