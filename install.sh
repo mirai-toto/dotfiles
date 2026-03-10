@@ -56,31 +56,14 @@ change_default_shell_to_zsh() {
   fi
 }
 
-stow_path() {
-  local target_dir=$1
-  local dest_dir=$2
-
-  if [ ! -d "$dest_dir" ]; then
-    echo "Destination directory $dest_dir does not exist. Creating it..."
-    mkdir -p "$dest_dir"
-  fi
-
-  if [ -d "$target_dir" ]; then
-    echo "Stowing $(basename "$target_dir")..."
-    stow -t "$dest_dir" "$target_dir"
-  else
-    echo "Directory $target_dir not found. Skipping $(basename "$target_dir") setup."
-    exit 1
-  fi
-}
-
-stow_dotfiles() {
-  cd "$SCRIPT_DIR" || exit
-  stow_path "tmux" "$HOME"
-  stow_path "shell" "$HOME"
-  stow_path "git" "$HOME"
-  stow_path "scripts" "$HOME/.local/bin"
-  stow_path "nvim" "$HOME/.config/nvim"
+apply_dotfiles() {
+  echo "Applying dotfiles with chezmoi..."
+  mkdir -p "$HOME/.config/chezmoi"
+  cat > "$HOME/.config/chezmoi/chezmoi.toml" << EOF
+[chezmoi]
+  sourceDir = "$SCRIPT_DIR"
+EOF
+  chezmoi apply --source "$SCRIPT_DIR"
 }
 
 setup_tmux_plugin_manager() {
@@ -130,23 +113,14 @@ install_wt_settings() {
   uv tool install -e "$HOME/.local/src/wt-settings"
 }
 
+
 setup_secrets() {
   if [ ! -f "$HOME/.secrets" ]; then
     echo "Creating ~/.secrets from template..."
-    cp "$SCRIPT_DIR/shell/.secrets.example" "$HOME/.secrets"
+    cp "$SCRIPT_DIR/.secrets.example" "$HOME/.secrets"
     echo "Fill in your secrets at ~/.secrets"
   else
     echo "~/.secrets already exists. Skipping."
-  fi
-}
-
-setup_git_local() {
-  if [ ! -f "$HOME/.gitconfig.local" ]; then
-    echo "Creating ~/.gitconfig.local from template..."
-    cp "$SCRIPT_DIR/git/.gitconfig.local.example" "$HOME/.gitconfig.local"
-    echo "Fill in your git identity at ~/.gitconfig.local"
-  else
-    echo "~/.gitconfig.local already exists. Skipping."
   fi
 }
 
@@ -174,10 +148,9 @@ print_completion_message() {
 ensure_local_bin
 install_utilities
 change_default_shell_to_zsh
-stow_dotfiles
+apply_dotfiles
 install_tmux_plugins
 setup_secrets
-setup_git_local
 configure_locale
 install_wt_settings
 configure_wsl_terminal_profile

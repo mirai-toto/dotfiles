@@ -1,3 +1,9 @@
+# Auto-attach to tmux (must run before p10k instant prompt redirects stdin)
+USE_TMUX=true
+if [ -z "$TMUX" ] && [ "$USE_TMUX" = "true" ] && [[ -t 1 ]]; then
+  exec tmux new-session -A -s main
+fi
+
 # Powerlevel10k Instant Prompt (should stay at the top)
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
@@ -16,8 +22,6 @@ source ~/.key-bindings.zsh
 source ~/.aliases.sh
 
 # Environment Variables
-
-USE_TMUX=true
 
 export SHELL="/home/linuxbrew/.linuxbrew/bin/zsh"
 export XDG_CONFIG_HOME="$HOME/.config"
@@ -87,7 +91,3 @@ eval "$(zoxide init zsh)"
 # Powerlevel10k Configuration
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
-# Auto-attach to tmux on shell startup
-if [ -z "$TMUX" ] && [ "$USE_TMUX" = "true" ] && [[ -t 0 ]]; then
-  tmux attach 2>/dev/null || tmux new
-fi
