@@ -80,7 +80,7 @@ stow_dotfiles() {
   stow_path "shell" "$HOME"
   stow_path "git" "$HOME"
   stow_path "scripts" "$HOME/.local/bin"
-  stow_path "nvim" "$HOME/.config"
+  stow_path "nvim" "$HOME/.config/nvim"
 }
 
 setup_tmux_plugin_manager() {
