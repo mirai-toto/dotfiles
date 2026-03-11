@@ -67,9 +67,10 @@ EOF
 }
 
 setup_tmux_plugin_manager() {
-  if [ ! -d "$HOME/.tmux/plugins/tpm" ]; then
+  if [ ! -d "$HOME/.config/tmux/plugins/tpm" ]; then
     echo "Cloning TPM..."
-    git clone https://github.com/tmux-plugins/tpm "$HOME/.tmux/plugins/tpm"
+    mkdir -p "$HOME/.config/tmux/plugins"
+    git clone https://github.com/tmux-plugins/tpm "$HOME/.config/tmux/plugins/tpm"
   else
     echo "TPM is already installed."
   fi
