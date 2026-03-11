@@ -56,17 +56,6 @@ change_default_shell_to_zsh() {
   fi
 }
 
-install_zinit() {
-  ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
-  if [ ! -f "$ZINIT_HOME/zinit.zsh" ]; then
-    echo "Installing zinit..."
-    mkdir -p "$(dirname "$ZINIT_HOME")"
-    git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
-  else
-    echo "zinit is already installed."
-  fi
-}
-
 apply_dotfiles() {
   echo "Applying dotfiles with chezmoi..."
   mkdir -p "$HOME/.config/chezmoi"
@@ -85,7 +74,6 @@ setup_tmux_plugin_manager() {
     echo "TPM is already installed."
   fi
 }
-
 
 configure_locale() {
   echo "Configuring locale..."
