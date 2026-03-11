@@ -1,7 +1,10 @@
 #!/bin/bash
-# Save changes from a destination file back to the dotfiles source.
-# Usage: ./save.sh <destination-path>
-# Example: ./save.sh ~/.zshrc
+# Pull a live file back into the dotfiles repo (machine → repo).
+# Run this after editing a deployed file directly (e.g. in ~/.config/).
+#
+# Usage:   ./save.sh <destination-path>
+# Example: ./save.sh ~/.config/tmux/tmux.conf
+#          ./save.sh ~/.zshrc
 
 if [ -z "$1" ]; then
     echo "Usage: save.sh <destination-path>"

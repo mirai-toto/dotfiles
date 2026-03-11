@@ -107,7 +107,7 @@ install_wt_settings() {
 setup_secrets() {
   if [ ! -f "$HOME/.secrets" ]; then
     echo "Creating ~/.secrets from template..."
-    cp "$SCRIPT_DIR/.secrets.example" "$HOME/.secrets"
+    cp "$SCRIPT_DIR/secrets.example" "$HOME/.secrets"
     echo "Fill in your secrets at ~/.secrets"
   else
     echo "~/.secrets already exists. Skipping."

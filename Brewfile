@@ -18,4 +18,5 @@ brew "neovim"        # 0.11.6
 brew "xclip"         # 0.13_1
 brew "tree"          # 2.3.1
 brew "uv"            # 0.10.9
+brew "gitmux"
 cask "claude-code"

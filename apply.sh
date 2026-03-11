@@ -1,4 +1,9 @@
 #!/bin/bash
+# Deploy dotfiles from the repo to the machine (repo → machine).
+# Run this after pulling changes or editing files in ~/dotfiles directly.
+# Does: git pull → brew bundle → chezmoi apply
+#
+# Usage: ./apply.sh
 
 SCRIPT_DIR=$(dirname "$(realpath "$0")")
 
