@@ -39,4 +39,4 @@ alias cd="z"
 # yazi
 alias y="yazi"
 
-alias meteo="curl -s \"https://wttr.in/La%20Ciotat\""
+meteo() { curl -s "https://wttr.in/${USER_WEATHER_LOCATION}"; }
