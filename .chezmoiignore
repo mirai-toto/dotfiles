@@ -8,3 +8,5 @@ apply.sh
 save.sh
 README.md
 themes/
+Dockerfile
+test-install.sh
