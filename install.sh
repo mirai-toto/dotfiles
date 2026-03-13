@@ -114,6 +114,19 @@ setup_secrets() {
   fi
 }
 
+import_wt_themes() {
+  if [ -z "$WSL_DISTRO_NAME" ]; then
+    echo "Not running inside WSL. Skipping Windows Terminal theme import."
+    return
+  fi
+
+  echo "Importing Windows Terminal themes..."
+  for theme_file in "$SCRIPT_DIR/themes/"*.json; do
+    [ -f "$theme_file" ] || continue
+    wts scheme add "$theme_file"
+  done
+}
+
 configure_wsl_terminal_profile() {
   if [ -z "$WSL_DISTRO_NAME" ]; then
     echo "Not running inside WSL. Skipping Windows Terminal profile configuration."
@@ -143,5 +156,6 @@ setup_tmux_plugin_manager
 setup_secrets
 configure_locale
 install_wt_settings
+import_wt_themes
 configure_wsl_terminal_profile
 print_completion_message
