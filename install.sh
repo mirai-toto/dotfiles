@@ -59,7 +59,7 @@ change_default_shell_to_zsh() {
 apply_dotfiles() {
   echo "Applying dotfiles with chezmoi..."
   mkdir -p "$HOME/.config/chezmoi"
-  cat > "$HOME/.config/chezmoi/chezmoi.toml" << EOF
+  cat >"$HOME/.config/chezmoi/chezmoi.toml" <<EOF
 [chezmoi]
   sourceDir = "$SCRIPT_DIR"
 EOF
@@ -103,7 +103,6 @@ install_wt_settings() {
   uv tool install -e "$HOME/.local/src/wt-settings"
 }
 
-
 setup_secrets() {
   if [ ! -f "$HOME/.secrets" ]; then
     echo "Creating ~/.secrets from template..."
@@ -141,10 +140,10 @@ configure_wsl_terminal_profile() {
 }
 
 print_completion_message() {
+  echo "Setup complete."
+  echo -e "\033[33mDon't forget to fill in your secrets at ~/.secrets\033[0m"
   echo -e "\033[31mTo apply the changes:\033[0m"
   echo -e "- Close and reopen your terminal. (This starts a new session.)"
-  echo -e "- Alternatively, run 'exec zsh'. (This reloads the shell in the current terminal.)"
-  echo "Setup complete."
 }
 
 # Main Script Execution

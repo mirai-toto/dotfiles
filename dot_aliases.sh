@@ -39,4 +39,10 @@ alias cd="z"
 # yazi
 alias y="yazi"
 
-meteo() { curl -s "https://wttr.in/${USER_WEATHER_LOCATION}"; }
+meteo() {
+  if [ -z "$USER_WEATHER_LOCATION" ]; then
+    echo "USER_WEATHER_LOCATION is not set. Please fill it in ~/.secrets"
+    return 1
+  fi
+  curl -s "https://wttr.in/${USER_WEATHER_LOCATION}"
+}
