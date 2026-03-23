@@ -6,6 +6,7 @@ export PATH="$HOME/.local/bin:$PATH"
 export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH"
 export PATH="/snap/bin:$PATH"
 export EDITOR='nvim'
+export SUDO_EDITOR=$(which nvim)
 export LANG=en_US.UTF-8
 
 FZF_OPTS_WITH_BATCAT_AND_TREE="--preview 'if test -d {}; then tree -L 3 -a -I \".git\" --charset X {}; else bat --color always {}; fi'"
