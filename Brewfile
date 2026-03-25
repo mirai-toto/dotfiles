@@ -1,4 +1,5 @@
 brew "gcc"
+brew "gh"
 brew "zsh"
 brew "tldr"
 brew "fzf"
