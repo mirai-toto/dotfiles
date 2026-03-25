@@ -11,6 +11,9 @@ ensure_local_bin() {
 }
 
 install_homebrew() {
+  echo "Installing build-essential..."
+  sudo apt-get install -y build-essential
+
   echo "Installing Homebrew..."
   if ! command -v brew &>/dev/null; then
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
