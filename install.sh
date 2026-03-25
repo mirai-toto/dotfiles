@@ -133,6 +133,7 @@ configure_wsl_terminal_profile() {
   fi
 
   echo "Configuring Windows Terminal profile '$WSL_DISTRO_NAME'..."
+  wts --install-completion
   wts profile font "$WSL_DISTRO_NAME" --face "DroidSansM Nerd Font Mono"
   wts profile opacity "$WSL_DISTRO_NAME" 80 --acrylic
   wts profile bell "$WSL_DISTRO_NAME" --disable
