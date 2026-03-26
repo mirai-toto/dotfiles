@@ -116,6 +116,16 @@ setup_secrets() {
   fi
 }
 
+setup_git_local() {
+  if [ ! -f "$HOME/.gitconfig.local" ]; then
+    echo "Creating ~/.gitconfig.local from template..."
+    cp "$SCRIPT_DIR/gitconfig_local.example" "$HOME/.gitconfig.local"
+    echo "Fill in your git identity at ~/.gitconfig.local"
+  else
+    echo "~/.gitconfig.local already exists. Skipping."
+  fi
+}
+
 import_wt_themes() {
   if [ -z "$WSL_DISTRO_NAME" ]; then
     echo "Not running inside WSL. Skipping Windows Terminal theme import."
@@ -145,7 +155,9 @@ configure_wsl_terminal_profile() {
 
 print_completion_message() {
   echo "Setup complete."
-  echo -e "\033[33mDon't forget to fill in your secrets at ~/.secrets\033[0m"
+  echo -e "\033[33mDon't forget to fill in:\033[0m"
+  echo -e "  - \033[33m~/.gitconfig.local\033[0m  (git name and email)"
+  echo -e "  - \033[33m~/.secrets\033[0m           (API keys and other secrets)"
   echo -e "\033[31mTo apply the changes:\033[0m"
   echo -e "- Close and reopen your terminal. (This starts a new session.)"
 }
@@ -157,6 +169,7 @@ change_default_shell_to_zsh
 apply_dotfiles
 setup_tmux_plugin_manager
 setup_secrets
+setup_git_local
 configure_locale
 install_wt_settings
 import_wt_themes

@@ -13,6 +13,17 @@ This repo sets up:
 
 ---
 
+## ⚠️ After install checklist
+
+These are created automatically with empty values — don't forget to fill them in:
+
+| File | What to fill in |
+| ---- | --------------- |
+| `~/.gitconfig.local` | `name` and `email` for git commits |
+| `~/.secrets` | API keys and other secrets |
+
+---
+
 ## 🐳 Test in a container
 
 Before installing on a real machine, you can test the full install inside a Docker container:
@@ -171,3 +182,19 @@ nvim ~/.secrets
 ```
 
 Current secrets: `ANTHROPIC_API_KEY`, `GEMINI_API_KEY`, `USER_WEATHER_LOCATION`.
+
+---
+
+## 👤 Git identity
+
+`~/.gitconfig.local` is created on first install from `gitconfig_local.example` with empty `name` and `email` fields. It is never committed. Fill it in after install:
+
+```bash
+nvim ~/.gitconfig.local
+```
+
+```ini
+[user]
+    name = Your Name
+    email = you@example.com
+```
