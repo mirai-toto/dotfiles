@@ -10,10 +10,22 @@ ensure_local_bin() {
   export PATH="$HOME/.local/bin:$PATH"
 }
 
-install_homebrew() {
-  echo "Installing build-essential..."
-  sudo apt-get install -y build-essential
+install_build_dependencies() {
+  if command -v apt-get &>/dev/null; then
+    echo "Installing build-essential (Debian/Ubuntu)..."
+    sudo apt-get install -y build-essential
+  elif command -v dnf &>/dev/null; then
+    echo "Installing build tools (Fedora/RHEL)..."
+    sudo dnf groupinstall -y "Development Tools"
+  elif command -v pacman &>/dev/null; then
+    echo "Installing base-devel (Arch)..."
+    sudo pacman -S --noconfirm base-devel
+  else
+    echo "Unknown package manager. Skipping build dependencies."
+  fi
+}
 
+install_homebrew() {
   echo "Installing Homebrew..."
   if ! command -v brew &>/dev/null; then
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -39,6 +51,15 @@ install_utilities() {
   install_homebrew
   echo "Installing utilities..."
   brew bundle --file="$SCRIPT_DIR/Brewfile"
+}
+
+install_rust() {
+  echo "Installing Rust toolchain via rustup..."
+  if ! command -v rustup &>/dev/null; then
+    rustup-init -y
+  else
+    echo "Rust toolchain already installed."
+  fi
 }
 
 change_default_shell_to_zsh() {
@@ -163,15 +184,29 @@ print_completion_message() {
 }
 
 # Main Script Execution
+
+# System
 ensure_local_bin
+configure_locale
+install_build_dependencies
+
+# Tools
+install_homebrew
 install_utilities
+install_rust
+
+# Shell
 change_default_shell_to_zsh
 apply_dotfiles
 setup_tmux_plugin_manager
+
+# Config
 setup_secrets
 setup_git_local
-configure_locale
+
+# WSL
 install_wt_settings
 import_wt_themes
 configure_wsl_terminal_profile
+
 print_completion_message
