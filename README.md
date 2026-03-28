@@ -9,7 +9,8 @@ This repo sets up:
 - 🖥️ **Tmux** — full config split across focused files + plugins
 - 📝 **Neovim** — LazyVim-based editor config
 - 🔧 **Local bin scripts** — productivity scripts deployed to `~/.local/bin/`
-- 🪟 **Windows Terminal** — auto-configured when running under WSL
+
+> Setting up a fresh Linux machine? Use [linux-setup](https://github.com/mirai-toto/linux-setup) — it handles distro dependencies, Rust, npm globals, WSL configuration, and calls this repo's `install.sh` automatically.
 
 ---
 
@@ -21,18 +22,6 @@ These are created automatically with empty values — don't forget to fill them 
 | ---- | --------------- |
 | `~/.gitconfig.local` | `name` and `email` for git commits |
 | `~/.secrets` | API keys and other secrets |
-
----
-
-## 🐳 Test in a container
-
-Before installing on a real machine, you can test the full install inside a Docker container:
-
-```bash
-./test-install.sh
-```
-
-This builds a Docker image and drops you into an interactive shell after `install.sh` completes.
 
 ---
 
@@ -49,12 +38,10 @@ cd ~/dotfiles
 `install.sh` does the following:
 
 1. Installs Homebrew and all packages from `Brewfile`
-2. Changes the default shell to Homebrew's zsh
-3. Applies dotfiles with chezmoi
+2. Applies dotfiles with chezmoi
+3. Changes the default shell to Homebrew's zsh
 4. Clones TPM (tmux plugin manager)
 5. Creates `~/.secrets` from `secrets.example` (fill in your API keys)
-6. Configures locale (`en_US.UTF-8`)
-7. **(WSL only)** Installs and configures Windows Terminal via [wt-settings](https://github.com/mirai-toto/wt-settings)
 
 After install, restart your terminal or run `exec zsh`. Tmux plugins install automatically on first launch.
 
@@ -164,12 +151,6 @@ Scripts deployed to `~/.local/bin/` with execute permissions:
 | `tmux_setup.sh`            | Ensure a standard set of named windows exist on new sessions |
 | `fzf_listoldfiles.sh`      | List recent files and open in Neovim via fzf (`nlof`)        |
 | `zoxide_openfiles_nvim.sh` | Find any file via zoxide and open in Neovim (`nzo`)          |
-
----
-
-## 🪟 Windows Terminal
-
-Auto-configured during install when running under WSL, via [wt-settings](https://github.com/mirai-toto/wt-settings). Color scheme files live in `themes/`.
 
 ---
 
