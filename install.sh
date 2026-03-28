@@ -13,7 +13,7 @@ ensure_local_bin() {
 install_build_dependencies() {
   if command -v apt-get &>/dev/null; then
     echo "Installing build-essential (Debian/Ubuntu)..."
-    sudo apt-get install -y build-essential
+    sudo apt-get install -y build-essential pkg-config libssl-dev
   elif command -v dnf &>/dev/null; then
     echo "Installing build tools (Fedora/RHEL)..."
     sudo dnf groupinstall -y "Development Tools"
@@ -53,10 +53,15 @@ install_utilities() {
   brew bundle --file="$SCRIPT_DIR/Brewfile"
 }
 
+install_npm_globals() {
+  echo "Installing npm global packages..."
+  npm install -g @commitlint/config-conventional
+}
+
 install_rust() {
   echo "Installing Rust toolchain via rustup..."
-  if ! command -v rustup &>/dev/null; then
-    rustup-init -y
+  if [ ! -d "$HOME/.cargo/bin" ]; then
+    "$(brew --prefix rustup)/bin/rustup" default stable
   else
     echo "Rust toolchain already installed."
   fi
@@ -191,8 +196,8 @@ configure_locale
 install_build_dependencies
 
 # Tools
-install_homebrew
 install_utilities
+install_npm_globals
 install_rust
 
 # Shell
