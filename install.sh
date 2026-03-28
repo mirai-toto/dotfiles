@@ -4,25 +4,9 @@ SCRIPT_DIR=$(dirname "$(realpath "$0")")
 
 ensure_local_bin() {
   if [ ! -d "$HOME/.local/bin" ]; then
-    echo "Creating $HOME/.local/bin directory..."
     mkdir -p "$HOME/.local/bin"
   fi
   export PATH="$HOME/.local/bin:$PATH"
-}
-
-install_build_dependencies() {
-  if command -v apt-get &>/dev/null; then
-    echo "Installing build-essential (Debian/Ubuntu)..."
-    sudo apt-get install -y build-essential pkg-config libssl-dev
-  elif command -v dnf &>/dev/null; then
-    echo "Installing build tools (Fedora/RHEL)..."
-    sudo dnf groupinstall -y "Development Tools"
-  elif command -v pacman &>/dev/null; then
-    echo "Installing base-devel (Arch)..."
-    sudo pacman -S --noconfirm base-devel
-  else
-    echo "Unknown package manager. Skipping build dependencies."
-  fi
 }
 
 install_homebrew() {
@@ -51,20 +35,6 @@ install_utilities() {
   install_homebrew
   echo "Installing utilities..."
   brew bundle --file="$SCRIPT_DIR/Brewfile"
-}
-
-install_npm_globals() {
-  echo "Installing npm global packages..."
-  npm install -g @commitlint/config-conventional
-}
-
-install_rust() {
-  echo "Installing Rust toolchain via rustup..."
-  if [ ! -d "$HOME/.cargo/bin" ]; then
-    "$(brew --prefix rustup)/bin/rustup" default stable
-  else
-    echo "Rust toolchain already installed."
-  fi
 }
 
 change_default_shell_to_zsh() {
@@ -105,33 +75,6 @@ setup_tmux_plugin_manager() {
   fi
 }
 
-configure_locale() {
-  echo "Configuring locale..."
-  if ! locale -a | grep -q "en_US.utf8"; then
-    sudo locale-gen en_US.UTF-8
-    sudo update-locale LANG=en_US.UTF-8
-    echo "Locale en_US.UTF-8 configured successfully."
-  else
-    echo "Locale en_US.UTF-8 is already configured."
-  fi
-}
-
-install_wt_settings() {
-  if [ -z "$WSL_DISTRO_NAME" ]; then
-    echo "Not running inside WSL. Skipping wt-settings installation."
-    return
-  fi
-
-  echo "Installing wt-settings..."
-  if [ ! -d "$HOME/.local/src/wt-settings" ]; then
-    mkdir -p "$HOME/.local/src"
-    git clone https://github.com/mirai-toto/wt-settings.git "$HOME/.local/src/wt-settings"
-  else
-    echo "wt-settings already cloned."
-  fi
-  uv tool install -e "$HOME/.local/src/wt-settings"
-}
-
 setup_secrets() {
   if [ ! -f "$HOME/.secrets" ]; then
     echo "Creating ~/.secrets from template..."
@@ -152,66 +95,21 @@ setup_git_local() {
   fi
 }
 
-import_wt_themes() {
-  if [ -z "$WSL_DISTRO_NAME" ]; then
-    echo "Not running inside WSL. Skipping Windows Terminal theme import."
-    return
-  fi
-
-  echo "Importing Windows Terminal themes..."
-  for theme_file in "$SCRIPT_DIR/themes/"*.json; do
-    [ -f "$theme_file" ] || continue
-    wts scheme add "$theme_file"
-  done
-}
-
-configure_wsl_terminal_profile() {
-  if [ -z "$WSL_DISTRO_NAME" ]; then
-    echo "Not running inside WSL. Skipping Windows Terminal profile configuration."
-    return
-  fi
-
-  echo "Configuring Windows Terminal profile '$WSL_DISTRO_NAME'..."
-  wts --install-completion
-  wts profile font "$WSL_DISTRO_NAME" --face "DroidSansM Nerd Font Mono"
-  wts profile opacity "$WSL_DISTRO_NAME" 80 --acrylic
-  wts profile bell "$WSL_DISTRO_NAME" --disable
-  wts scheme apply "$WSL_DISTRO_NAME" "Dark+"
-}
-
 print_completion_message() {
-  echo "Setup complete."
+  echo "Dotfiles applied."
   echo -e "\033[33mDon't forget to fill in:\033[0m"
   echo -e "  - \033[33m~/.gitconfig.local\033[0m  (git name and email)"
   echo -e "  - \033[33m~/.secrets\033[0m           (API keys and other secrets)"
   echo -e "\033[31mTo apply the changes:\033[0m"
-  echo -e "- Close and reopen your terminal. (This starts a new session.)"
+  echo -e "- Close and reopen your terminal."
 }
 
-# Main Script Execution
-
-# System
+# Main
 ensure_local_bin
-configure_locale
-install_build_dependencies
-
-# Tools
 install_utilities
-install_npm_globals
-install_rust
-
-# Shell
-change_default_shell_to_zsh
 apply_dotfiles
+change_default_shell_to_zsh
 setup_tmux_plugin_manager
-
-# Config
 setup_secrets
 setup_git_local
-
-# WSL
-install_wt_settings
-import_wt_themes
-configure_wsl_terminal_profile
-
 print_completion_message
