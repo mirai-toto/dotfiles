@@ -2,6 +2,13 @@
 
 SCRIPT_DIR=$(dirname "$(realpath "$0")")
 
+check_homebrew() {
+  if ! command -v brew &>/dev/null; then
+    echo "Error: Homebrew is not installed. Please install it before running this script." >&2
+    exit 1
+  fi
+}
+
 ensure_local_bin() {
   if [ ! -d "$HOME/.local/bin" ]; then
     mkdir -p "$HOME/.local/bin"
@@ -9,30 +16,7 @@ ensure_local_bin() {
   export PATH="$HOME/.local/bin:$PATH"
 }
 
-install_homebrew() {
-  echo "Installing Homebrew..."
-  if ! command -v brew &>/dev/null; then
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-  else
-    echo "Homebrew is already installed."
-  fi
-
-  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-
-  if ! grep -q 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' ~/.profile; then
-    echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"' >>~/.profile
-    echo "Added Homebrew initialization to ~/.profile."
-  else
-    echo "Homebrew initialization already present in ~/.profile."
-  fi
-
-  if brew analytics state | grep -q "enabled"; then
-    brew analytics off
-  fi
-}
-
 install_utilities() {
-  install_homebrew
   echo "Installing utilities..."
   brew bundle --file="$SCRIPT_DIR/Brewfile"
 }
@@ -105,6 +89,7 @@ print_completion_message() {
 }
 
 # Main
+check_homebrew
 ensure_local_bin
 install_utilities
 apply_dotfiles

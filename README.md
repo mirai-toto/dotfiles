@@ -10,7 +10,7 @@ This repo sets up:
 - 📝 **Neovim** — LazyVim-based editor config
 - 🔧 **Local bin scripts** — productivity scripts deployed to `~/.local/bin/`
 
-> Setting up a fresh Linux machine? Use [linux-setup](https://github.com/mirai-toto/linux-setup) — it handles distro dependencies, Rust, npm globals, WSL configuration, and calls this repo's `install.sh` automatically.
+> Setting up a fresh Linux machine? Use [linux-setup](https://github.com/mirai-toto/linux-setup) — it handles distro dependencies, Homebrew, Rust, npm globals, WSL configuration, and calls this repo's `install.sh` automatically.
 
 ---
 
@@ -37,11 +37,12 @@ cd ~/dotfiles
 
 `install.sh` does the following:
 
-1. Installs Homebrew and all packages from `Brewfile`
+1. Installs all packages from `Brewfile` (requires Homebrew to be pre-installed)
 2. Applies dotfiles with chezmoi
 3. Changes the default shell to Homebrew's zsh
 4. Clones TPM (tmux plugin manager)
-5. Creates `~/.secrets` from `secrets.example` (fill in your API keys)
+5. Creates `~/.secrets` from `secrets.example`
+6. Creates `~/.gitconfig.local` from `gitconfig_local.example`
 
 After install, restart your terminal or run `exec zsh`. Tmux plugins install automatically on first launch.
 
