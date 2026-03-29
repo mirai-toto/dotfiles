@@ -10,4 +10,5 @@ save.sh
 README.md
 themes/
 Dockerfile
+LICENSE
 test-install.sh
