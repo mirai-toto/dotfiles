@@ -1,5 +1,13 @@
 return {
   {
+    "folke/which-key.nvim",
+    opts = {
+      spec = {
+        { "<leader>gx", group = "GitLab" },
+      },
+    },
+  },
+  {
     "harrisoncramer/gitlab.nvim",
     dependencies = {
       "nvim-lua/plenary.nvim",
@@ -12,10 +20,10 @@ return {
     end,
     opts = {},
     keys = {
-      { "<leader>glr", "<cmd>lua require('gitlab').review()<cr>", desc = "GitLab Review" },
-      { "<leader>gls", "<cmd>lua require('gitlab').summary()<cr>", desc = "GitLab MR Summary" },
-      { "<leader>gla", "<cmd>lua require('gitlab').approve()<cr>", desc = "GitLab Approve" },
-      { "<leader>glp", "<cmd>lua require('gitlab').pipeline()<cr>", desc = "GitLab Pipeline" },
+      { "<leader>gxr", "<cmd>lua require('gitlab').review()<cr>", desc = "GitLab Review" },
+      { "<leader>gxs", "<cmd>lua require('gitlab').summary()<cr>", desc = "GitLab MR Summary" },
+      { "<leader>gxa", "<cmd>lua require('gitlab').approve()<cr>", desc = "GitLab Approve" },
+      { "<leader>gxp", "<cmd>lua require('gitlab').pipeline()<cr>", desc = "GitLab Pipeline" },
     },
   },
   {
@@ -29,4 +37,3 @@ return {
     },
   },
 }
-
