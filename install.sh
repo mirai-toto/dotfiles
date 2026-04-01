@@ -79,10 +79,21 @@ setup_git_local() {
   fi
 }
 
+setup_git_work() {
+  if [ ! -f "$HOME/.gitconfig.work" ]; then
+    echo "Creating ~/.gitconfig.work from template..."
+    cp "$SCRIPT_DIR/gitconfig_work.example" "$HOME/.gitconfig.work"
+    echo "Fill in your work git identity at ~/.gitconfig.work"
+  else
+    echo "~/.gitconfig.work already exists. Skipping."
+  fi
+}
+
 print_completion_message() {
   echo "Dotfiles applied."
   echo -e "\033[33mDon't forget to fill in:\033[0m"
   echo -e "  - \033[33m~/.gitconfig.local\033[0m  (git name and email)"
+  echo -e "  - \033[33m~/.gitconfig.work\033[0m   (work git name and email)"
   echo -e "  - \033[33m~/.secrets\033[0m           (API keys and other secrets)"
   echo -e "\033[31mTo apply the changes:\033[0m"
   echo -e "- Close and reopen your terminal."
@@ -97,4 +108,5 @@ change_default_shell_to_zsh
 setup_tmux_plugin_manager
 setup_secrets
 setup_git_local
+setup_git_work
 print_completion_message

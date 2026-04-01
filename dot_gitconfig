@@ -1,20 +1,45 @@
 [include]
-	path = ~/.gitconfig.local
+    path = ~/.gitconfig.local
+[includeIf "gitdir:~/work/"]
+    path = ~/.gitconfig.work
 
 [core]
-	editor = nvim
-	excludesfile = ~/.gitignore_global
+    editor = nvim
+    excludesfile = ~/.gitignore_global
+    eol = lf
+    pager = delta
 
 [init]
-	defaultBranch = main
+    defaultBranch = main
 
 [pull]
-	rebase = false
+    rebase = false
 
 [push]
-	autoSetupRemote = true
+    autoSetupRemote = true
+
+[fetch]
+    prune = true
 
 [credential "https://github.com"]
-	helper = !gh auth git-credential
-[fetch]
-	prune = true
+    helper = !gh auth git-credential
+
+[diff]
+    tool = nvimdiff
+    colorMoved = default
+
+[merge]
+    conflictstyle = zdiff3
+
+[rebase]
+    autoSquash = true
+    autoStash = true
+
+[rerere]
+    enabled = true
+
+[alias]
+    lg = log --oneline --graph --decorate --all
+    wip = commit -am "wip"
+    undo = reset HEAD~1 --mixed
+    bn = rev-parse --abbrev-ref HEAD
