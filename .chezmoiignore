@@ -3,6 +3,7 @@
 .chezmoiignore
 secrets.example
 gitconfig_local.example
+gitconfig_work.example
 Brewfile
 install.sh
 apply.sh
