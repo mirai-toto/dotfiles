@@ -22,13 +22,13 @@ install_utilities() {
 }
 
 change_default_shell_to_zsh() {
-  if [ -x "/home/linuxbrew/.linuxbrew/bin/zsh" ]; then
+  if [ -x "$(brew --prefix)/bin/zsh" ]; then
     echo "Changing default shell to Homebrew's Zsh..."
-    if ! grep -Fxq "/home/linuxbrew/.linuxbrew/bin/zsh" /etc/shells; then
-      echo "/home/linuxbrew/.linuxbrew/bin/zsh" | sudo tee -a /etc/shells
+    if ! grep -Fxq "$(brew --prefix)/bin/zsh" /etc/shells; then
+      echo "$(brew --prefix)/bin/zsh" | sudo tee -a /etc/shells
     fi
     echo "Please enter your password to change the default shell."
-    if sudo chsh -s /home/linuxbrew/.linuxbrew/bin/zsh "$USER"; then
+    if sudo chsh -s "$(brew --prefix)/bin/zsh" "$USER"; then
       echo "Default shell successfully changed to Homebrew's Zsh."
     else
       echo "Failed to change the default shell. Please check your permissions or configuration."
