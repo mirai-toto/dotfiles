@@ -27,7 +27,7 @@ local function edit_current()
     return
   end
 
-  if field == "type" then
+  if form.col_type(form.STATE.cursor.col) == "TYPE" then
     form.cycle_type()
     render.render()
     return
@@ -96,15 +96,15 @@ M.open = function()
 
   form.reset(branch)
 
-  local width = 62
+  local width = render.WIDTH
   local height = 12
   local ui = vim.api.nvim_list_uis()[1]
   local col = math.floor((ui.width - width) / 2)
   local row = math.floor((ui.height - height) / 2)
 
   form.STATE.buf = vim.api.nvim_create_buf(false, true)
-  vim.api.nvim_buf_set_option(form.STATE.buf, "bufhidden", "wipe")
-  vim.api.nvim_buf_set_option(form.STATE.buf, "filetype", "glab_pipeline")
+  vim.bo[form.STATE.buf].bufhidden = "wipe"
+  vim.bo[form.STATE.buf].filetype = "glab_pipeline"
 
   form.STATE.win = vim.api.nvim_open_win(form.STATE.buf, true, {
     relative = "editor",
@@ -118,8 +118,8 @@ M.open = function()
     title_pos = "center",
   })
 
-  vim.api.nvim_win_set_option(form.STATE.win, "cursorline", false)
-  vim.api.nvim_win_set_option(form.STATE.win, "wrap", false)
+  vim.wo[form.STATE.win].cursorline = false
+  vim.wo[form.STATE.win].wrap = false
 
   set_keymaps()
   render.render()

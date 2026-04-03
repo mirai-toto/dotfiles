@@ -10,16 +10,43 @@ M.STATE = {
   branch = nil,
 }
 
-local COLS = 3
+-- ─── Row class ───────────────────────────────────────────────────────────────
 
--- ─── Row ─────────────────────────────────────────────────────────────────────
+local Row = {}
+Row.__index = Row
+
+function Row.new()
+  local self = setmetatable({}, Row)
+  for _, col in ipairs(types.ROW_SCHEMA) do
+    self[col.name] = col.default
+  end
+  return self
+end
+
+--- Returns the display string for a field (badge for type, raw value otherwise).
+function Row:display(field)
+  if field == "type" then
+    return self.type.badge
+  end
+  return self[field] or ""
+end
+
+function Row:set(field, value)
+  self[field] = value
+end
+
+-- ─── Public API ──────────────────────────────────────────────────────────────
 
 M.new_row = function()
-  return { key = "", type = "string", value = "" }
+  return Row.new()
 end
 
 M.col_name = function(col)
-  return ({ "key", "type", "value" })[col]
+  return types.ROW_SCHEMA[col] and types.ROW_SCHEMA[col].name
+end
+
+M.col_type = function(col)
+  return types.ROW_SCHEMA[col] and types.ROW_SCHEMA[col].type
 end
 
 -- ─── Mutations ───────────────────────────────────────────────────────────────
@@ -50,11 +77,11 @@ end
 
 M.move_cursor = function(direction)
   local col = M.STATE.cursor.col + direction
-  if col > COLS then
+  if col > #types.ROW_SCHEMA then
     col = 1
     M.STATE.cursor.row = math.min(M.STATE.cursor.row + 1, #M.STATE.rows)
   elseif col < 1 then
-    col = COLS
+    col = #types.ROW_SCHEMA
     M.STATE.cursor.row = math.max(M.STATE.cursor.row - 1, 1)
   end
   M.STATE.cursor.col = col
@@ -67,7 +94,7 @@ end
 M.cycle_type = function()
   local row = M.STATE.rows[M.STATE.cursor.row]
   if row then
-    row.type = types.cycle(row.type)
+    row:set("type", types.cycle(row.type))
   end
 end
 
@@ -75,7 +102,7 @@ M.set_field = function(value)
   local row = M.STATE.rows[M.STATE.cursor.row]
   local field = M.col_name(M.STATE.cursor.col)
   if row and field and value ~= nil then
-    row[field] = value
+    row:set(field, value)
   end
 end
 
@@ -84,3 +111,4 @@ M.current_row = function()
 end
 
 return M
+
