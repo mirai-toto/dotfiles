@@ -94,7 +94,7 @@ M.render = function()
   table.insert(lines, sep)
   table.insert(lines, "  $ " .. utils.build_cmd(S.branch, S.rows))
   table.insert(lines, "")
-  table.insert(lines, "  <a> add  <d> del  <Tab> next col  <CR> edit  <r> run  <q> quit")
+  table.insert(lines, "  <a> add  <d> del  <Tab> col  <CR> edit  <r> run  <q> quit")
 
   vim.api.nvim_buf_set_lines(S.buf, 0, -1, false, lines)
 

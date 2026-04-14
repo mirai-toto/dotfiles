@@ -121,6 +121,12 @@ M.open = function()
   vim.wo[form.STATE.win].cursorline = false
   vim.wo[form.STATE.win].wrap = false
 
+  vim.api.nvim_create_autocmd("WinLeave", {
+    buffer = form.STATE.buf,
+    once = true,
+    callback = close,
+  })
+
   set_keymaps()
   render.render()
 end
