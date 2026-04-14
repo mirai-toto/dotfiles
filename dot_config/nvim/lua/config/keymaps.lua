@@ -7,4 +7,4 @@ end, { desc = "Search and Replace (current file)" })
 
 local glab = require("glab")
 vim.keymap.set("n", "<leader>glp", glab.view_pipeline, { desc = "Pipeline CI (glab)" })
-vim.keymap.set("n", "<leader>glR", glab.run_pipeline, { desc = "Run pipeline (glab)" })
+vim.keymap.set("n", "<leader>glr", glab.run_pipeline, { desc = "Run pipeline (glab)" })

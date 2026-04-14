@@ -28,12 +28,12 @@ return {
       },
     },
     keys = {
-      { "<leader>glr", "<cmd>lua require('gitlab').review()<cr>", desc = "Review" },
+      { "<leader>glR", "<cmd>lua require('gitlab').review()<cr>", desc = "Review" },
       { "<leader>gls", "<cmd>lua require('gitlab').summary()<cr>", desc = "Summary" },
       { "<leader>gla", "<cmd>lua require('gitlab').approve()<cr>", desc = "Approve" },
       { "<leader>glo", "<cmd>lua require('gitlab').open_in_browser()<cr>", desc = "Open in Browser" },
       { "<leader>glm", "<cmd>lua require('gitlab').merge()<cr>", desc = "Merge" },
-      { "<leader>glp", "<cmd>lua require('gitlab').pipeline()<cr>", desc = "Pipeline" },
+      { "<leader>glP", "<cmd>lua require('gitlab').pipeline()<cr>", desc = "Pipeline" },
     },
   },
 }
