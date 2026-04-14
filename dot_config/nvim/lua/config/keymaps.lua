@@ -4,9 +4,12 @@
 vim.keymap.set("n", "<leader>sp", function()
   require("grug-far").open({ prefills = { paths = vim.fn.expand("%") } })
 end, { desc = "Search and Replace (current file)" })
+
 vim.keymap.set("v", "<leader>sp", function()
   require("grug-far").with_visual_selection({ prefills = { paths = vim.fn.expand("%") } })
 end, { desc = "Search and Replace (current file)" })
+
+-- vim.keymap.set("x", "p", "P", { desc = "Paste without overwriting register" })
 
 vim.keymap.del("n", "<leader>gl")
 local glab = require("glab")
