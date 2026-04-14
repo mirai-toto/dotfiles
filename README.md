@@ -121,8 +121,6 @@ Prefix: `Ctrl+a`
 | `prefix + F`       | Open tmux sessionizer         |
 | `prefix + f`       | Run tmux window setup         |
 | `prefix + +`       | New named session             |
-| `prefix + Alt+i`   | Switch to indexed window mode |
-| `prefix + Alt+l`   | Switch to labeled window mode |
 | `prefix + Space`   | Open which-key menu           |
 
 ---

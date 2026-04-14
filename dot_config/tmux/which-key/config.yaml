@@ -21,10 +21,12 @@ macros:
       - display -p "\n\n... Press ENTER to continue"
   - name: window-mode-indexed
     commands:
-      - "source-file #{@tmux_config_dir}/conf/windows_indexed.conf"
+      - "set -gq @window_mode indexed"
+      - "source-file #{@tmux_config_dir}/conf/windows.conf"
   - name: window-mode-labeled
     commands:
-      - "source-file #{@tmux_config_dir}/conf/windows_labeled.conf"
+      - "set -gq @window_mode labeled"
+      - "source-file #{@tmux_config_dir}/conf/windows.conf"
   - name: restart-pane
     commands:
       - display "#{log_info} Restarting pane"
