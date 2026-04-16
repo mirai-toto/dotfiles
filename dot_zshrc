@@ -1,3 +1,6 @@
+#### Profile & Environment Setup ####
+[[ -f ~/.profile ]] && source ~/.profile
+
 #### Environment Variables ####
 export XDG_CONFIG_HOME="$HOME/.config"
 export ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
@@ -18,8 +21,7 @@ export FZF_CTRL_T_OPTS="$FZF_OPTS_WITH_BATCAT_AND_TREE"
 export FZF_ALT_C_OPTS="$FZF_OPTS_WITH_BATCAT_AND_TREE"
 export FZF_TMUX_OPTS=" -p90%,70% "
 
-#### Profile & Secrets ####
-[[ -f ~/.profile ]] && source ~/.profile
+#### Secrets ####
 [[ -f ~/.secrets ]] && source ~/.secrets
 
 #### Zinit ####
