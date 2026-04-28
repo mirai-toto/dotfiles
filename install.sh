@@ -79,6 +79,15 @@ setup_git_local() {
   fi
 }
 
+fix_wsl_etc_environment() {
+  if grep -qi microsoft /proc/version 2>/dev/null; then
+    if grep -q '^PATH=' /etc/environment; then
+      echo "Removing static PATH from /etc/environment (restores WSL Windows path injection)..."
+      sudo sed -i '/^PATH=/d' /etc/environment
+    fi
+  fi
+}
+
 setup_git_work() {
   if [ ! -f "$HOME/.gitconfig.work" ]; then
     echo "Creating ~/.gitconfig.work from template..."
@@ -109,4 +118,5 @@ setup_tmux_plugin_manager
 setup_secrets
 setup_git_local
 setup_git_work
+fix_wsl_etc_environment
 print_completion_message
