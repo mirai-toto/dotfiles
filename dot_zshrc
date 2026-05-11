@@ -95,7 +95,9 @@ eval "$(zoxide init zsh)"
 #### Powerlevel10k Configuration ####
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
+# Set up tab-completion. Rebuilds the cache at most once a day to keep shell startup fast.
 fpath+=~/.zfunc
+fpath=($HOME/.local/share/zsh/site-functions $fpath)
 autoload -Uz compinit
 if [[ -n ~/.zcompdump(#qN.mh+24) ]]; then
   compinit
