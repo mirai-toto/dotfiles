@@ -1,5 +1,5 @@
 #### WSL ####
-#[[ -f ~/.wsl.zsh ]] && source ~/.wsl.zsh
+[[ -f ~/.wsl.zsh ]] && source ~/.wsl.zsh
 
 #### Profile & Environment Setup ####
 [[ -f ~/.profile ]] && source ~/.profile
