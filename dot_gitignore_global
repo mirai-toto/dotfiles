@@ -12,5 +12,3 @@ Thumbs.db
 .env
 .env.*
 *.pem
-
-**/.claude/settings.local.json

@@ -79,6 +79,16 @@ setup_git_local() {
   fi
 }
 
+install_flutter() {
+  local flutter_dir="$HOME/flutter"
+  if [ -d "$flutter_dir" ]; then
+    echo "Flutter is already installed at $flutter_dir. Skipping."
+  else
+    echo "Installing Flutter..."
+    git clone https://github.com/flutter/flutter.git "$flutter_dir" --branch stable --depth 1
+  fi
+}
+
 fix_wsl_etc_environment() {
   if grep -qi microsoft /proc/version 2>/dev/null; then
     if grep -q '^PATH=' /etc/environment; then
@@ -118,5 +128,6 @@ setup_tmux_plugin_manager
 setup_secrets
 setup_git_local
 setup_git_work
+install_flutter
 fix_wsl_etc_environment
 print_completion_message

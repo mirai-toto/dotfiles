@@ -14,6 +14,7 @@ export PATH="/snap/bin:$PATH"
 export EDITOR='nvim'
 export SUDO_EDITOR=$(which nvim)
 export LANG=en_US.UTF-8
+export PATH="$HOME/flutter/bin:$PATH"
 
 FZF_OPTS_WITH_BATCAT_AND_TREE="--preview 'if test -d {}; then tree -L 3 -a -I \".git\" --charset X {}; else bat --color always {}; fi'"
 export FZF_DEFAULT_COMMAND="fd --hidden --strip-cwd-prefix --exclude .git"
@@ -23,9 +24,6 @@ export FZF_DEFAULT_OPTS=" --height 50% --layout=default --border --color=hl:#2dd
 export FZF_CTRL_T_OPTS="$FZF_OPTS_WITH_BATCAT_AND_TREE"
 export FZF_ALT_C_OPTS="$FZF_OPTS_WITH_BATCAT_AND_TREE"
 export FZF_TMUX_OPTS=" -p90%,70% "
-
-export FLUTTER_HOME=/opt/flutter
-export PATH="${FLUTTER_HOME}/bin:${PATH}"
 
 #### Secrets ####
 [[ -f ~/.secrets ]] && source ~/.secrets
