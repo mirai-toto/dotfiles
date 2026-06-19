@@ -10,7 +10,7 @@ This repo sets up:
 - 📝 **Neovim** — LazyVim-based editor config
 - 🔧 **Local bin scripts** — productivity scripts deployed to `~/.local/bin/`
 
-> Setting up a fresh Linux machine? Use [linux-setup](https://github.com/mirai-toto/linux-setup) — it handles distro dependencies, Homebrew, Rust, npm globals, WSL configuration, and calls this repo's `install.sh` automatically.
+> Setting up a fresh Linux machine? Use [linux-setup](https://github.com/mirai-toto/linux-setup) — it handles distro dependencies, Rust, npm globals, WSL configuration, and calls this repo's `install.sh` automatically.
 
 ---
 
@@ -29,20 +29,24 @@ These are created automatically with empty values — don't forget to fill them 
 
 ### First install
 
+Clone anywhere you like, then run `install.sh`:
+
 ```bash
-git clone https://github.com/mirai-toto/dotfiles.git ~/dotfiles
-cd ~/dotfiles
+git clone https://github.com/mirai-toto/dotfiles.git
+cd dotfiles
 ./install.sh
 ```
 
 `install.sh` does the following:
 
-1. Installs all packages from `Brewfile` (requires Homebrew to be pre-installed)
-2. Applies dotfiles with chezmoi
-3. Changes the default shell to Homebrew's zsh
-4. Clones TPM (tmux plugin manager)
-5. Creates `~/.secrets` from `secrets.example`
-6. Creates `~/.gitconfig.local` from `gitconfig_local.example`
+1. Installs Homebrew if not already present
+2. Installs all packages from `Brewfile`
+3. Applies dotfiles with chezmoi
+4. Changes the default shell to Homebrew's zsh
+5. Clones TPM (tmux plugin manager)
+6. Installs Flutter to `~/.local/share/flutter`
+7. Creates `~/.secrets` from `secrets.example`
+8. Creates `~/.gitconfig.local` from `gitconfig_local.example`
 
 After install, restart your terminal or run `exec zsh`. Tmux plugins install automatically on first launch.
 
@@ -64,7 +68,7 @@ Save edited live files back to the repo (machine → repo):
 ./save.sh ~/.config/tmux/tmux.conf
 ```
 
-After saving, commit and push the changes in `~/dotfiles`.
+After saving, commit and push the changes.
 
 ---
 
@@ -72,7 +76,7 @@ After saving, commit and push the changes in `~/dotfiles`.
 
 All packages are managed via Homebrew and declared in `Brewfile`. Running `./apply.sh` (or `brew bundle`) will install/sync them.
 
-**Notable CLI tools:** fzf, fd, bat, ripgrep, eza, zoxide, lazygit, uv, tldr, yazi
+**Notable CLI tools:** fzf, fd, bat, ripgrep, eza, zoxide, lazygit, uv, tldr, yazi, age, rbw
 
 ---
 
@@ -162,6 +166,18 @@ nvim ~/.secrets
 ```
 
 Current secrets: `ANTHROPIC_API_KEY`, `GEMINI_API_KEY`, `USER_WEATHER_LOCATION`.
+
+Private dotfiles (secrets, git identity) are managed separately in [dotfiles-private](https://github.com/mirai-toto/dotfiles-private), encrypted with [age](https://age-encryption.org) and stored in [Bitwarden](https://bitwarden.com).
+
+### Bitwarden setup
+
+Install is handled by Brewfile. `rbw` integrates with the system keyring so no session token management is needed. To set up:
+
+```bash
+rbw config set email you@example.com
+rbw login        # prompts for master password once, then stays unlocked via keyring
+rbw unlock       # re-unlock if the keyring session expired
+```
 
 ---
 
