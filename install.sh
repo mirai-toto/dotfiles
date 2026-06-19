@@ -74,15 +74,6 @@ setup_tmux_plugin_manager() {
   fi
 }
 
-setup_secrets() {
-  if [ ! -f "$HOME/.secrets" ]; then
-    echo "Creating ~/.secrets from template..."
-    cp "$SCRIPT_DIR/secrets.example" "$HOME/.secrets"
-    echo "Fill in your secrets at ~/.secrets"
-  else
-    echo "~/.secrets already exists. Skipping."
-  fi
-}
 
 setup_git_local() {
   if [ ! -f "$HOME/.gitconfig.local" ]; then
@@ -129,7 +120,6 @@ print_completion_message() {
   echo -e "\033[33mDon't forget to fill in:\033[0m"
   echo -e "  - \033[33m~/.gitconfig.local\033[0m  (git name and email)"
   echo -e "  - \033[33m~/.gitconfig.work\033[0m   (work git name and email)"
-  echo -e "  - \033[33m~/.secrets\033[0m           (API keys and other secrets)"
   echo -e "\033[31mTo apply the changes:\033[0m"
   echo -e "- Close and reopen your terminal."
 }
@@ -141,7 +131,6 @@ install_utilities
 apply_dotfiles
 change_default_shell_to_zsh
 setup_tmux_plugin_manager
-setup_secrets
 setup_git_local
 setup_git_work
 install_flutter
