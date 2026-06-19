@@ -167,17 +167,7 @@ nvim ~/.secrets
 
 Current secrets: `ANTHROPIC_API_KEY`, `GEMINI_API_KEY`, `USER_WEATHER_LOCATION`.
 
-Private dotfiles (secrets, git identity) are managed separately in [dotfiles-private](https://github.com/mirai-toto/dotfiles-private), encrypted with [age](https://age-encryption.org) and stored in [Bitwarden](https://bitwarden.com).
-
-### Bitwarden setup
-
-Install is handled by Brewfile. `rbw` integrates with the system keyring so no session token management is needed. To set up:
-
-```bash
-rbw config set email you@example.com
-rbw login        # prompts for master password once, then stays unlocked via keyring
-rbw unlock       # re-unlock if the keyring session expired
-```
+Private dotfiles (secrets, git identity) are managed separately in [dotfiles-private](https://github.com/mirai-toto/dotfiles-private), encrypted with [age](https://age-encryption.org) and stored in [Bitwarden](https://bitwarden.com). See that repo for setup instructions.
 
 ---
 
