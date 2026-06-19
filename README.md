@@ -16,12 +16,13 @@ This repo sets up:
 
 ## ⚠️ After install checklist
 
-These are created automatically with empty values — don't forget to fill them in:
+This is created automatically with empty values — don't forget to fill it in:
 
 | File | What to fill in |
 | ---- | --------------- |
 | `~/.gitconfig.local` | `name` and `email` for git commits |
-| `~/.secrets` | API keys and other secrets |
+
+For secrets (`ANTHROPIC_API_KEY`, `GEMINI_API_KEY`) and private config (`~/.gitconfig.local`), see [dotfiles-private](https://github.com/mirai-toto/dotfiles-private).
 
 ---
 
@@ -45,8 +46,7 @@ cd dotfiles
 4. Changes the default shell to Homebrew's zsh
 5. Clones TPM (tmux plugin manager)
 6. Installs Flutter to `~/.local/share/flutter`
-7. Creates `~/.secrets` from `secrets.example`
-8. Creates `~/.gitconfig.local` from `gitconfig_local.example`
+7. Creates `~/.gitconfig.local` from `gitconfig_local.example`
 
 After install, restart your terminal or run `exec zsh`. Tmux plugins install automatically on first launch.
 
@@ -157,17 +157,9 @@ Scripts deployed to `~/.local/bin/` with execute permissions:
 
 ---
 
-## 🔐 Secrets
+## 🔐 Private dotfiles
 
-`~/.secrets` is created on first install from `secrets.example`. It is never committed. Edit it to fill in your values:
-
-```bash
-nvim ~/.secrets
-```
-
-Current secrets: `ANTHROPIC_API_KEY`, `GEMINI_API_KEY`, `USER_WEATHER_LOCATION`.
-
-Private dotfiles (secrets, git identity) are managed separately in [dotfiles-private](https://github.com/mirai-toto/dotfiles-private), encrypted with [age](https://age-encryption.org) and stored in [Bitwarden](https://bitwarden.com). See that repo for setup instructions.
+Secrets and git identity are managed separately in [dotfiles-private](https://github.com/mirai-toto/dotfiles-private), encrypted with [age](https://age-encryption.org) and stored in [Bitwarden](https://bitwarden.com). See that repo for setup instructions.
 
 ---
 
