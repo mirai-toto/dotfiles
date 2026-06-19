@@ -95,11 +95,12 @@ setup_git_local() {
 }
 
 install_flutter() {
-  local flutter_dir="$HOME/flutter"
+  local flutter_dir="$HOME/.local/share/flutter"
   if [ -d "$flutter_dir" ]; then
     echo "Flutter is already installed at $flutter_dir. Skipping."
   else
     echo "Installing Flutter..."
+    mkdir -p "$HOME/.local/share"
     git clone https://github.com/flutter/flutter.git "$flutter_dir" --branch stable --depth 1
   fi
 }
