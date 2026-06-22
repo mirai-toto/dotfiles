@@ -75,15 +75,6 @@ setup_tmux_plugin_manager() {
 }
 
 
-setup_git_local() {
-  if [ ! -f "$HOME/.gitconfig.local" ]; then
-    echo "Creating ~/.gitconfig.local from template..."
-    cp "$SCRIPT_DIR/gitconfig_local.example" "$HOME/.gitconfig.local"
-    echo "Fill in your git identity at ~/.gitconfig.local"
-  else
-    echo "~/.gitconfig.local already exists. Skipping."
-  fi
-}
 
 install_flutter() {
   local flutter_dir="$HOME/.local/share/flutter"
@@ -107,10 +98,8 @@ fix_wsl_etc_environment() {
 
 print_completion_message() {
   echo "Dotfiles applied."
-  echo -e "\033[33mDon't forget to fill in:\033[0m"
-  echo -e "  - \033[33m~/.gitconfig.local\033[0m  (git name and email)"
-  echo -e "\033[31mTo apply the changes:\033[0m"
-  echo -e "- Close and reopen your terminal."
+  echo -e "\033[33mNext:\033[0m run dotfiles-private/install.sh to deploy secrets and git identity."
+  echo -e "\033[31mTo apply the changes:\033[0m close and reopen your terminal."
 }
 
 # Main
@@ -120,7 +109,6 @@ install_utilities
 apply_dotfiles
 change_default_shell_to_zsh
 setup_tmux_plugin_manager
-setup_git_local
 install_flutter
 fix_wsl_etc_environment
 print_completion_message

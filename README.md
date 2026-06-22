@@ -14,15 +14,9 @@ This repo sets up:
 
 ---
 
-## ⚠️ After install checklist
+## ⚠️ After install
 
-This is created automatically with empty values — don't forget to fill it in:
-
-| File | What to fill in |
-| ---- | --------------- |
-| `~/.gitconfig.local` | `name` and `email` for personal git commits |
-
-For secrets (`ANTHROPIC_API_KEY`, `GEMINI_API_KEY`) and private config (`~/.gitconfig.local`, `~/.gitconfig.work`), see [dotfiles-private](https://github.com/mirai-toto/dotfiles-private).
+Run [dotfiles-private](https://github.com/mirai-toto/dotfiles-private) after this to deploy secrets and git identity (`~/.gitconfig.local`, `~/.gitconfig.work`).
 
 ---
 
@@ -46,7 +40,6 @@ cd dotfiles
 4. Changes the default shell to Homebrew's zsh
 5. Clones TPM (tmux plugin manager)
 6. Installs Flutter to `~/.local/share/flutter`
-7. Creates `~/.gitconfig.local` from `gitconfig_local.example` with empty `name` and `email` fields
 
 After install, restart your terminal or run `exec zsh`. Tmux plugins install automatically on first launch.
 
@@ -165,16 +158,4 @@ Secrets and git identity are managed separately in [dotfiles-private](https://gi
 
 ## 👤 Git identity
 
-`~/.gitconfig.local` is created on first install from `gitconfig_local.example` with empty `name` and `email` fields. It is never committed. Fill it in after install:
-
-```bash
-nvim ~/.gitconfig.local
-```
-
-```ini
-[user]
-    name = Your Name
-    email = you@example.com
-```
-
-Work identity (`~/.gitconfig.work`) is managed in [dotfiles-private](https://github.com/mirai-toto/dotfiles-private) and deployed encrypted. It is applied automatically when inside `~/work/`.
+Personal (`~/.gitconfig.local`) and work (`~/.gitconfig.work`) identities are managed in [dotfiles-private](https://github.com/mirai-toto/dotfiles-private), deployed encrypted via chezmoi. `~/.gitconfig.work` is applied automatically by git when inside `~/work/`.
