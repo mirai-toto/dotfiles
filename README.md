@@ -158,4 +158,4 @@ Secrets and git identity are managed separately in [dotfiles-private](https://gi
 
 ## 👤 Git identity
 
-Personal (`~/.gitconfig.local`) and work (`~/.gitconfig.work`) identities are managed in [dotfiles-private](https://github.com/mirai-toto/dotfiles-private), deployed encrypted via chezmoi. `~/.gitconfig.work` is applied automatically by git when inside `~/work/`.
+Personal (`~/.gitconfig.local`) and work (`~/.gitconfig.work`) identities are managed in [dotfiles-private](https://github.com/mirai-toto/dotfiles-private), deployed encrypted via chezmoi. `~/.gitconfig.work` is applied automatically by git when inside `~/Work/`.

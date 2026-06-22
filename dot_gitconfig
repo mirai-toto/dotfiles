@@ -1,6 +1,6 @@
 [include]
     path = ~/.gitconfig.local
-[includeIf "gitdir:~/work/"]
+[includeIf "gitdir:~/Work/"]
     path = ~/.gitconfig.work
 
 [core]
