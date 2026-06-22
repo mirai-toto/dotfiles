@@ -74,8 +74,6 @@ setup_tmux_plugin_manager() {
   fi
 }
 
-
-
 install_flutter() {
   local flutter_dir="$HOME/.local/share/flutter"
   if [ -d "$flutter_dir" ]; then
