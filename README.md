@@ -20,9 +20,9 @@ This is created automatically with empty values — don't forget to fill it in:
 
 | File | What to fill in |
 | ---- | --------------- |
-| `~/.gitconfig.local` | `name` and `email` for git commits |
+| `~/.gitconfig.local` | `name` and `email` for personal git commits |
 
-For secrets (`ANTHROPIC_API_KEY`, `GEMINI_API_KEY`) and private config (`~/.gitconfig.local`), see [dotfiles-private](https://github.com/mirai-toto/dotfiles-private).
+For secrets (`ANTHROPIC_API_KEY`, `GEMINI_API_KEY`) and private config (`~/.gitconfig.local`, `~/.gitconfig.work`), see [dotfiles-private](https://github.com/mirai-toto/dotfiles-private).
 
 ---
 
@@ -46,7 +46,7 @@ cd dotfiles
 4. Changes the default shell to Homebrew's zsh
 5. Clones TPM (tmux plugin manager)
 6. Installs Flutter to `~/.local/share/flutter`
-7. Creates `~/.gitconfig.local` from `gitconfig_local.example`
+7. Creates `~/.gitconfig.local` from `gitconfig_local.example` with empty `name` and `email` fields
 
 After install, restart your terminal or run `exec zsh`. Tmux plugins install automatically on first launch.
 
@@ -176,3 +176,5 @@ nvim ~/.gitconfig.local
     name = Your Name
     email = you@example.com
 ```
+
+Work identity (`~/.gitconfig.work`) is managed in [dotfiles-private](https://github.com/mirai-toto/dotfiles-private) and deployed encrypted. It is applied automatically when inside `~/work/`.
