@@ -24,6 +24,10 @@
 [credential "https://github.com"]
     helper = !gh auth git-credential
 
+[credential "https://gitlab.com"]
+    helper =
+    helper = !glab auth git-credential
+
 [diff]
     tool = nvimdiff
     colorMoved = default
