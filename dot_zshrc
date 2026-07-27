@@ -52,8 +52,7 @@ zinit light Aloxaf/fzf-tab
 zinit snippet OMZP::git
 
 #### Auto-attach to tmux (before p10k instant prompt redirects stdin) ####
-USE_TMUX=true
-if [ -z "$TMUX" ] && [ "$USE_TMUX" = "true" ] && [[ -t 1 ]]; then
+if [ -z "$TMUX" ] && [[ -f "${XDG_STATE_HOME:-$HOME/.local/state}/tmux_enabled" ]] && [[ -t 1 ]]; then
   exec tmux new-session -A -s main
 fi
 
@@ -110,3 +109,7 @@ if [[ -n ~/.zcompdump(#qN.mh+24) ]]; then
 else
   compinit -C
 fi
+
+# Android SDK (Linux, for Flutter builds)
+export ANDROID_HOME="$HOME/Android/Sdk"
+export PATH="$PATH:$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/platform-tools"
