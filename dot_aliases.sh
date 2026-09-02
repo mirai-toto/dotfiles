@@ -39,6 +39,9 @@ alias cd="z"
 # yazi
 alias y="yazi"
 
+#opencode
+alias oc="opencode"
+
 meteo() {
   if [ -z "$USER_WEATHER_LOCATION" ]; then
     echo "USER_WEATHER_LOCATION is not set. Please fill it in ~/.secrets"
