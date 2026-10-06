@@ -1,0 +1,81 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+usage() {
+  cat <<'EOF'
+Usage: glf [--wait] [--repo PROJECT] [PIPELINE_ID]
+
+Show the trace for every failed job in a GitLab pipeline. Without a pipeline
+ID, inspect the latest pipeline for the current branch. Use --wait to wait for
+that pipeline to finish before showing failed job traces.
+EOF
+}
+
+repo_args=()
+pipeline_id=''
+wait_for_pipeline=false
+while [[ "$#" -gt 0 ]]; do
+  case "$1" in
+    -h|--help)
+      usage
+      exit 0
+      ;;
+    -R|--repo)
+      [[ "$#" -ge 2 ]] || { usage >&2; exit 2; }
+      repo_args+=(--repo "$2")
+      shift 2
+      ;;
+    --repo=*)
+      repo_args+=(--repo "${1#*=}")
+      shift
+      ;;
+    -w|--wait)
+      wait_for_pipeline=true
+      shift
+      ;;
+    --)
+      shift
+      [[ "$#" -le 1 ]] || { usage >&2; exit 2; }
+      pipeline_id="${1:-}"
+      break
+      ;;
+    -* )
+      usage >&2
+      exit 2
+      ;;
+    *)
+      [[ -z "$pipeline_id" ]] || { usage >&2; exit 2; }
+      pipeline_id="$1"
+      shift
+      ;;
+  esac
+done
+
+command -v glab >/dev/null || { printf 'error: glab is required\n' >&2; exit 1; }
+command -v jq >/dev/null || { printf 'error: jq is required\n' >&2; exit 1; }
+
+if [[ "$wait_for_pipeline" == true ]]; then
+  [[ -z "$pipeline_id" ]] || { printf 'error: --wait cannot be used with PIPELINE_ID\n' >&2; exit 2; }
+  glab ci status --wait "${repo_args[@]}" >/dev/null
+fi
+
+pipeline_args=(--output json --with-job-details "${repo_args[@]}")
+if [[ -n "$pipeline_id" ]]; then
+  pipeline_args+=(--pipeline-id "$pipeline_id")
+fi
+
+pipeline_json="$(glab ci get "${pipeline_args[@]}")"
+pipeline_id="$(jq -r '.id' <<<"$pipeline_json")"
+printf 'Pipeline %s (%s, %s)\n' "$pipeline_id" "$(jq -r '.status' <<<"$pipeline_json")" "$(jq -r '.ref // "current branch"' <<<"$pipeline_json")"
+
+failed_jobs="$(jq -r '.jobs[]? | select(.status == "failed") | [.id, .name] | @tsv' <<<"$pipeline_json")"
+if [[ -z "$failed_jobs" ]]; then
+  printf 'No failed jobs.\n'
+  exit 0
+fi
+
+while IFS=$'\t' read -r job_id job_name; do
+  printf '\n===== %s (%s) =====\n' "$job_name" "$job_id"
+  glab ci trace "$job_id" --pipeline-id "$pipeline_id" "${repo_args[@]}"
+done <<<"$failed_jobs"
