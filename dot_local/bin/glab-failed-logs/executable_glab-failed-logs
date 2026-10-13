@@ -13,6 +13,7 @@ EOF
 }
 
 repo_args=()
+repo_target=''
 pipeline_id=''
 wait_for_pipeline=false
 while [[ "$#" -gt 0 ]]; do
@@ -24,10 +25,12 @@ while [[ "$#" -gt 0 ]]; do
     -R|--repo)
       [[ "$#" -ge 2 ]] || { usage >&2; exit 2; }
       repo_args+=(--repo "$2")
+      repo_target="$2"
       shift 2
       ;;
     --repo=*)
       repo_args+=(--repo "${1#*=}")
+      repo_target="${1#*=}"
       shift
       ;;
     -w|--wait)
@@ -67,15 +70,58 @@ fi
 
 pipeline_json="$(glab ci get "${pipeline_args[@]}")"
 pipeline_id="$(jq -r '.id' <<<"$pipeline_json")"
-printf 'Pipeline %s (%s, %s)\n' "$pipeline_id" "$(jq -r '.status' <<<"$pipeline_json")" "$(jq -r '.ref // "current branch"' <<<"$pipeline_json")"
+[[ -n "$pipeline_id" && "$pipeline_id" != null ]] || { printf 'error: could not determine pipeline ID\n' >&2; exit 1; }
 
-failed_jobs="$(jq -r '.jobs[]? | select(.status == "failed") | [.id, .name] | @tsv' <<<"$pipeline_json")"
-if [[ -z "$failed_jobs" ]]; then
+declare -A seen_pipelines=()
+failed_job_count=0
+
+show_pipeline_logs() {
+  local current_id="$1"
+  local current_repo="$2"
+  local current_json="${3:-}"
+  local -a current_repo_args=()
+  local -a api_repo_args=()
+  local failed_jobs downstream_pipelines
+  local job_id job_name downstream_id downstream_url downstream_repo key
+
+  key="${current_repo:-.}:$current_id"
+  [[ -z "${seen_pipelines[$key]:-}" ]] || return 0
+  seen_pipelines[$key]=1
+
+  if [[ -n "$current_repo" ]]; then
+    current_repo_args=(--repo "$current_repo")
+    api_repo_args=(--repo "$current_repo")
+  fi
+
+  if [[ -z "$current_json" ]]; then
+    current_json="$(glab ci get --output json --with-job-details --pipeline-id "$current_id" "${current_repo_args[@]}")"
+  fi
+
+  printf 'Pipeline %s (%s, %s)\n' "$current_id" "$(jq -r '.status' <<<"$current_json")" "$(jq -r '.ref // "current branch"' <<<"$current_json")"
+
+  failed_jobs="$(jq -r '.jobs[]? | select(.status == "failed") | [.id, .name] | @tsv' <<<"$current_json")"
+  if [[ -n "$failed_jobs" ]]; then
+    while IFS=$'\t' read -r job_id job_name; do
+      printf '\n===== %s (%s) =====\n' "$job_name" "$job_id"
+      glab ci trace "$job_id" --pipeline-id "$current_id" "${current_repo_args[@]}"
+      ((failed_job_count += 1))
+    done <<<"$failed_jobs"
+  fi
+
+  # Trigger/bridge jobs are exposed separately from regular jobs by GitLab.
+  # Follow their downstream pipelines so failures in child pipelines are shown too.
+  downstream_pipelines="$(glab api "projects/:fullpath/pipelines/$current_id/bridges" --paginate "${api_repo_args[@]}" | jq -r '.[]? | .downstream_pipeline // empty | [.id, (.web_url // "")] | @tsv')"
+  while IFS=$'\t' read -r downstream_id downstream_url; do
+    [[ -n "$downstream_id" ]] || continue
+    downstream_repo="$current_repo"
+    if [[ "$downstream_url" == http://* || "$downstream_url" == https://* ]]; then
+      downstream_repo="${downstream_url%%/-/pipelines/*}"
+    fi
+    show_pipeline_logs "$downstream_id" "$downstream_repo"
+  done <<<"$downstream_pipelines"
+}
+
+show_pipeline_logs "$pipeline_id" "$repo_target" "$pipeline_json"
+if (( failed_job_count == 0 )); then
   printf 'No failed jobs.\n'
-  exit 0
 fi
-
-while IFS=$'\t' read -r job_id job_name; do
-  printf '\n===== %s (%s) =====\n' "$job_name" "$job_id"
-  glab ci trace "$job_id" --pipeline-id "$pipeline_id" "${repo_args[@]}"
-done <<<"$failed_jobs"
