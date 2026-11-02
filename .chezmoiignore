@@ -13,5 +13,3 @@ themes/
 Dockerfile
 LICENSE
 test-install.sh
-.local/bin/browser-tools/node_modules/**
-.local/bin/browser-tools/output/**
