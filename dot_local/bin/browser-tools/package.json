@@ -1,0 +1,16 @@
+{
+  "name": "browser-tools",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=22.18.0" },
+  "scripts": {
+    "setup": "bash setup.sh",
+    "setup:chrome": "bash setup-chrome.sh",
+    "test": "node smoke-test.ts"
+  },
+  "dependencies": {
+    "@playwright/mcp": "0.0.83",
+    "playwright": "1.64.0-alpha-1790635538000"
+  }
+}

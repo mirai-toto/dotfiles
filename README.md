@@ -147,6 +147,8 @@ Scripts deployed to `~/.local/bin/` with execute permissions:
 | `tmux_setup.sh`            | Ensure a standard set of named windows exist on new sessions |
 | `fzf_listoldfiles.sh`      | List recent files and open in Neovim via fzf (`nlof`)        |
 | `zoxide_openfiles_nvim.sh` | Find any file via zoxide and open in Neovim (`nzo`)          |
+| `glf` / `glab-failed-logs` | Print failed GitLab job traces ([guide](docs/glab-failed-logs/README.md)) |
+| `btools` / `browser-tools` | Set up and test Playwright and Windows Chrome MCP ([guide](docs/browser-tools/README.md)) |
 
 ---
 

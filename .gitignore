@@ -1,2 +1,4 @@
 dot_secrets
 .claude/
+dot_local/bin/browser-tools/node_modules/
+dot_local/bin/browser-tools/output/

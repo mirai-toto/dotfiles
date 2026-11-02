@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+usage() {
+  cat <<'EOF'
+Usage: btools COMMAND [ARGS]
+
+Commands:
+  setup          Install, test, and register isolated Chromium MCP
+  setup:chrome   Install and register Windows Chrome extension MCP
+  test [URL]     Run the browser smoke test (optionally check a website)
+  playwright     Start the isolated Chromium MCP server
+  chrome         Start the Windows Chrome extension MCP server
+  help           Show this help
+EOF
+}
+
+root="$(dirname -- "$(readlink -f -- "${BASH_SOURCE[0]}")")"
+command="${1:-help}"
+if (( $# > 0 )); then
+  shift
+fi
+
+case "$command" in
+  setup) exec bash "$root/setup.sh" "$@" ;;
+  setup:chrome) exec bash "$root/setup-chrome.sh" "$@" ;;
+  test) exec npm --prefix "$root" test -- "$@" ;;
+  playwright) exec node "$root/mcp.ts" "$@" ;;
+  chrome) exec bash "$root/chrome.sh" "$@" ;;
+  help | -h | --help) usage ;;
+  *)
+    printf 'Unknown command: %s\n' "$command" >&2
+    usage >&2
+    exit 2
+    ;;
+esac
