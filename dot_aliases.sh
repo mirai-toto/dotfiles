@@ -23,7 +23,7 @@ alias v="fd --hidden --type file --exclude .git | fzf-tmux -p --reverse | xargs 
 
 # eza
 alias ls="eza --color=always --icons=always"
-alias l="ls -la"
+alias l="eza -la --git"
 
 # tree
 alias tree="tree -L 3 -a -I '.git' --charset X"
