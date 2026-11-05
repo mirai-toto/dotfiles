@@ -31,19 +31,11 @@ export FZF_TMUX_OPTS=" -p90%,70% "
 export USER_WEATHER_LOCATION=""  # wttr.in location (e.g. "Paris", "CDG", "48.8566,2.3522")
 export GITLAB_URL=""
 
-#### Secrets ####
-[[ -f "$HOME/.secrets/personal/env.sh" ]] && source "$HOME/.secrets/personal/env.sh"
-if [[ "${DOTFILES_WORK_SHELL:-}" == 1 && -f "$HOME/.secrets/work/env.sh" ]]; then
-  source "$HOME/.secrets/work/env.sh"
-fi
-
-work-shell() {
-  if [[ ! -r "$HOME/.secrets/work/env.sh" ]]; then
-    print -u2 -- "Missing work secrets: ~/.secrets/work/env.sh"
-    return 1
-  fi
-  DOTFILES_WORK_SHELL=1 zsh -i
-}
+#### Optional local shell hooks ####
+for private_hook in "$HOME"/.config/dotfiles/private-shell.d/*.zsh(N); do
+  [[ -r "$private_hook" ]] && source "$private_hook"
+done
+unset private_hook
 
 #### Zinit ####
 if [ ! -f "$ZINIT_HOME/zinit.zsh" ]; then
@@ -64,7 +56,7 @@ zinit light Aloxaf/fzf-tab
 zinit snippet OMZP::git
 
 #### Auto-attach to tmux (before p10k instant prompt redirects stdin) ####
-if [ -z "$TMUX" ] && [[ -z "${DOTFILES_WORK_SHELL:-}" ]] && [[ -f "${XDG_STATE_HOME:-$HOME/.local/state}/tmux_enabled" ]] && [[ -t 1 ]]; then
+if [ -z "$TMUX" ] && [[ -z "${DOTFILES_SKIP_TMUX_AUTOATTACH:-}" ]] && [[ -f "${XDG_STATE_HOME:-$HOME/.local/state}/tmux_enabled" ]] && [[ -t 1 ]]; then
   exec tmux new-session -A -s main
 fi
 

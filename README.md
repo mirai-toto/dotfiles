@@ -16,7 +16,7 @@ This repo sets up:
 
 ## ⚠️ After install
 
-Run the [personal dotfiles-private](https://github.com/mirai-toto/dotfiles-private) after this for personal settings. Work-only settings belong in the separate work `dotfiles-private` repository.
+Install any private dotfiles profiles you use after setting up the public tools. This repository does not select their names, secrets, or Git identities.
 
 ---
 
@@ -45,7 +45,7 @@ cd dotfiles
 
 After install, restart your terminal or run `exec zsh`. Tmux plugins install automatically on first launch.
 
-Normal shells load only `~/.secrets/personal/env.sh`. Run `work-shell` to start a child shell that also loads `~/.secrets/work/env.sh`; `exit` returns to the personal shell. The work env is not loaded merely by entering `~/Work/`.
+Normal shells source readable `*.zsh` hooks in `~/.config/dotfiles/private-shell.d/` in filename order. Each installed private profile owns its own hook and decides whether and how to load secrets. Without private hooks, public dotfiles load no secrets.
 
 ### Keeping up to date
 
@@ -67,14 +67,14 @@ Save edited live files back to the repo (machine → repo):
 
 `./save.sh` commits and pushes managed changes automatically, without prompting or force-pushing. It does not stage unrelated repository files. If there are staged changes, unpushed commits, or a push failure, it stops and reports the problem.
 
-To sync this repository and both private dotfiles repositories from anywhere, use the installed `dotfiles-sync` command:
+To sync this repository and all registered private dotfiles profiles from anywhere, use the installed `dotfiles-sync` command:
 
 ```bash
 dotfiles-sync save   # re-add managed files, commit, and push each repo
 dotfiles-sync apply  # each repo pulls and applies (no package installs)
 ```
 
-The personal repo is found through `~/memos/personal`; the work repo is included when `~/memos/private` exists. These shortcuts are created by applying their respective private dotfiles. The wrapper simply runs each repo's `save.sh` or `apply.sh` in order. Each `save.sh` pushes without prompting or force-pushing and stages only chezmoi-managed files. Failures stop the command, so earlier repos may already have been pushed when a later repo fails.
+Each private installer registers its checkout as a symlink under `~/.config/dotfiles/profiles.d/` (for example, `foo -> /path/to/foo-repo`). The wrapper scans those symlinks and runs each repo's `save.sh` or `apply.sh`. It does not depend on memo shortcuts or chezmoi profile configs. Each `save.sh` pushes without prompting or force-pushing and stages only chezmoi-managed files. Failures stop the command, so earlier repos may already have been pushed when a later repo fails.
 
 ---
 
@@ -82,7 +82,7 @@ The personal repo is found through `~/memos/personal`; the work repo is included
 
 Homebrew packages are declared in `Brewfile`; Cargo packages (currently Ortie, the OAuth token helper for Himalaya) are declared in `CargoPackages`, one crate per line. Running `./apply.sh` installs both lists; `brew bundle` alone installs only the Brewfile. Use `./apply.sh --no-brew` to skip package installs.
 
-`./install.sh` installs Skills and GitLab Pipelines. `./apply.sh` updates installed OpenCode plugins, including when run with `--no-brew`. Work-only OpenCode settings stay in the work private repo.
+`./install.sh` installs Skills and GitLab Pipelines. `./apply.sh` updates installed OpenCode plugins, including when run with `--no-brew`. Private OpenCode settings belong to their respective private profiles.
 
 **Notable CLI tools:** fzf, fd, bat, ripgrep, eza, zoxide, lazygit, uv, tldr, yazi, age, rbw
 
@@ -168,12 +168,12 @@ Scripts deployed to `~/.local/bin/` with execute permissions:
 
 ## 🔐 Private dotfiles
 
-There are three repositories: this **public/generic `dotfiles`** for shared tooling (no secrets), **personal `dotfiles-private`** for personal settings and secrets, and **work `dotfiles-private`** for work-only settings and secrets. The private repos encrypt sensitive files with [age](https://age-encryption.org); see each repo for setup instructions.
+This **public `dotfiles`** repository provides shared tooling and contains no secrets. Optional private dotfiles repositories can use the [profile template](https://github.com/mirai-toto/dotfiles-private-template) to manage their own age-encrypted files and shell/Git integrations.
 
-The private repos now manage disjoint secrets and Git-config destinations: `~/.secrets/personal/env.sh` and `~/.gitconfig.local` belong to personal; `~/.secrets/work/env.sh` and `~/.gitconfig.work` belong to work. The work env is loaded only through `work-shell`. Do not schedule unattended `dotfiles-sync save` or `apply` until all migration commits are published and the profiles are verified from a fresh shell.
+Private profiles must have disjoint managed destinations. Verify their shell hooks and Git includes before enabling unattended `dotfiles-sync save` or `apply`.
 
 ---
 
 ## 👤 Git identity
 
-Personal identity belongs in personal `dotfiles-private` (`~/.gitconfig.local`); work identity belongs in work `dotfiles-private` (`~/.gitconfig.work`). Git uses the work file inside `~/Work/` via `includeIf`.
+Public Git configuration includes `~/.gitconfig.local` by default, then `~/.gitconfig.work` for repositories under `~/Work/` or `~/.cache/`. Each private repo owns its corresponding Git identity file; Git ignores an include when that file is absent.

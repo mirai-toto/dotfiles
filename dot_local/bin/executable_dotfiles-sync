@@ -3,47 +3,79 @@
 
 set -euo pipefail
 
-case "${1:-}" in
-save | apply) action=$1 ;;
--h | --help) echo "Usage: dotfiles-sync {save|apply}"; exit 0 ;;
-*) echo "Usage: dotfiles-sync {save|apply}" >&2; exit 2 ;;
-esac
+usage() {
+  echo "Usage: dotfiles-sync {save|apply}"
+}
 
-if [ "$#" -ne 1 ]; then
-  echo "Usage: dotfiles-sync {save|apply}" >&2
-  exit 2
-fi
-
-# The public repo is recorded by install.sh; the private repos create these shortcuts on apply.
-config="$HOME/.config/chezmoi/chezmoi.toml"
-if [ ! -f "$config" ] || [ ! -d "$HOME/memos/personal" ]; then
-  echo "Install public and personal dotfiles before running dotfiles-sync." >&2
-  exit 1
-fi
-
-public_repo=$(sed -n 's/^[[:space:]]*sourceDir[[:space:]]*=[[:space:]]*"\([^"]*\)".*/\1/p' "$config" | head -n 1)
-if [ -z "$public_repo" ] || [ ! -d "$public_repo" ]; then
-  echo "Public dotfiles sourceDir is missing or invalid in $config." >&2
-  exit 1
-fi
-
-repos=("$public_repo" "$(dirname "$(realpath "$HOME/memos/personal")")")
-if [ -L "$HOME/memos/private" ]; then
-  if [ ! -d "$HOME/memos/private" ]; then
-    echo "Work dotfiles shortcut is broken: $HOME/memos/private" >&2
-    exit 1
+public_repo_path() {
+  local config="$HOME/.config/chezmoi/chezmoi.toml"
+  local repo
+  if [ ! -f "$config" ]; then
+    echo "Install public dotfiles before running dotfiles-sync." >&2
+    return 1
   fi
-  repos+=("$(dirname "$(realpath "$HOME/memos/private")")")
-fi
 
-for repo in "${repos[@]}"; do
+  repo=$(sed -n 's/^[[:space:]]*sourceDir[[:space:]]*=[[:space:]]*"\([^"]*\)".*/\1/p' "$config" | head -n 1)
+  if [ -z "$repo" ] || [ ! -d "$repo" ]; then
+    echo "Public dotfiles sourceDir is missing or invalid in $config." >&2
+    return 1
+  fi
+  echo "$repo"
+}
+
+registered_repo_path() {
+  local registration=$1 action=$2
+  local profile=${registration##*/}
+  local repo
+  if [ ! -L "$registration" ] || [ ! -d "$registration" ]; then
+    echo "Invalid private profile registration: $registration" >&2
+    return 1
+  fi
+  repo=$(realpath "$registration")
+  if [ ! -f "$repo/profile-id" ] ||
+    [ "$(cat "$repo/profile-id")" != "$profile" ] || [ ! -f "$repo/$action.sh" ]; then
+    echo "Invalid private profile registration: $registration" >&2
+    return 1
+  fi
+  echo "$repo"
+}
+
+run_action() {
+  local repo=$1 action=$2 public_repo=$3
   if [ "$action" = save ]; then
     bash "$repo/save.sh"
+  elif [ "$repo" = "$public_repo" ]; then
+    bash "$repo/apply.sh" --no-brew
   else
-    if [ "$repo" = "$public_repo" ]; then
-      bash "$repo/apply.sh" --no-brew
-    else
-      bash "$repo/apply.sh"
-    fi
+    bash "$repo/apply.sh"
   fi
-done
+}
+
+main() {
+  local action registration repo public_repo
+  local -a repos
+  case "${1:-}" in
+  save | apply) action=$1 ;;
+  -h | --help) usage; return 0 ;;
+  *) usage >&2; return 2 ;;
+  esac
+  if [ "$#" -ne 1 ]; then
+    usage >&2
+    return 2
+  fi
+
+  # The public repo uses chezmoi; private installers register their checkout symlinks.
+  public_repo=$(public_repo_path)
+  repos=("$public_repo")
+  for registration in "$HOME"/.config/dotfiles/profiles.d/*; do
+    [ -e "$registration" ] || [ -L "$registration" ] || continue
+    repo=$(registered_repo_path "$registration" "$action")
+    repos+=("$repo")
+  done
+
+  for repo in "${repos[@]}"; do
+    run_action "$repo" "$action" "$public_repo"
+  done
+}
+
+main "$@"

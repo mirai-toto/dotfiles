@@ -103,7 +103,7 @@ fix_wsl_etc_environment() {
 
 print_completion_message() {
   echo "Dotfiles applied."
-  echo -e "\033[33mNext:\033[0m run dotfiles-private/install.sh to deploy secrets and git identity."
+  echo -e "\033[33mNext:\033[0m install any private dotfiles profiles you use."
   echo -e "\033[31mTo apply the changes:\033[0m close and reopen your terminal."
 }
 
