@@ -44,7 +44,7 @@ alias oc="opencode"
 
 meteo() {
   if [ -z "$USER_WEATHER_LOCATION" ]; then
-    echo "USER_WEATHER_LOCATION is not set. Please fill it in ~/.secrets"
+    echo "USER_WEATHER_LOCATION is not set. Set it in the active profile's env.sh"
     return 1
   fi
   curl -s "https://wttr.in/${USER_WEATHER_LOCATION}"

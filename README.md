@@ -45,6 +45,8 @@ cd dotfiles
 
 After install, restart your terminal or run `exec zsh`. Tmux plugins install automatically on first launch.
 
+Normal shells load only `~/.secrets/personal/env.sh`. Run `work-shell` to start a child shell that also loads `~/.secrets/work/env.sh`; `exit` returns to the personal shell. The work env is not loaded merely by entering `~/Work/`.
+
 ### Keeping up to date
 
 Pull and apply latest changes (repo → machine):
@@ -168,10 +170,10 @@ Scripts deployed to `~/.local/bin/` with execute permissions:
 
 There are three repositories: this **public/generic `dotfiles`** for shared tooling (no secrets), **personal `dotfiles-private`** for personal settings and secrets, and **work `dotfiles-private`** for work-only settings and secrets. The private repos encrypt sensitive files with [age](https://age-encryption.org); see each repo for setup instructions.
 
-**Not migrated yet:** Both private repos currently manage `~/.secrets` and `~/.gitconfig.local`. Applying one can overwrite the other's files; saving both can copy work credentials into the personal repo even though the files are encrypted. The intended secrets split is `~/.secrets.personal` and `~/.secrets.work`, with separate loading rules. Do not schedule unattended `dotfiles-sync save` or `apply` until the overlapping files and loading rules are resolved and verified.
+The private repos now manage disjoint secrets and Git-config destinations: `~/.secrets/personal/env.sh` and `~/.gitconfig.local` belong to personal; `~/.secrets/work/env.sh` and `~/.gitconfig.work` belong to work. The work env is loaded only through `work-shell`. Do not schedule unattended `dotfiles-sync save` or `apply` until all migration commits are published and the profiles are verified from a fresh shell.
 
 ---
 
 ## 👤 Git identity
 
-Personal identity belongs in personal `dotfiles-private`; work identity belongs in work `dotfiles-private`. Currently both repos also manage `~/.gitconfig.local`, so its ownership must be resolved before unattended apply. Git uses `~/.gitconfig.work` inside `~/Work/` via `includeIf`.
+Personal identity belongs in personal `dotfiles-private` (`~/.gitconfig.local`); work identity belongs in work `dotfiles-private` (`~/.gitconfig.work`). Git uses the work file inside `~/Work/` via `includeIf`.
