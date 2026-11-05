@@ -5,7 +5,9 @@ secrets.example
 gitconfig_local.example
 gitconfig_work.example
 Brewfile
+CargoPackages
 install.sh
+install-cargo-packages.sh
 apply.sh
 save.sh
 README.md

@@ -4,7 +4,7 @@ Personal development environment for WSL2 (Ubuntu), managed with [chezmoi](https
 
 This repo sets up:
 
-- 📦 **Dependencies** — all CLI tools via Homebrew (`Brewfile`)
+- 📦 **Dependencies** — CLI tools via Homebrew (`Brewfile`) and Cargo (`CargoPackages`)
 - 🐚 **Zsh** — zinit + powerlevel10k, aliases, key bindings
 - 🖥️ **Tmux** — full config split across focused files + plugins
 - 📝 **Neovim** — LazyVim-based editor config
@@ -36,10 +36,11 @@ cd dotfiles
 
 1. Installs Homebrew if not already present
 2. Installs all packages from `Brewfile`
-3. Applies dotfiles with chezmoi
-4. Changes the default shell to Homebrew's zsh
-5. Clones TPM (tmux plugin manager)
-6. Installs Flutter to `~/.local/share/flutter`
+3. Ensures a stable Rust toolchain is available and installs packages from `CargoPackages` with Cargo
+4. Applies dotfiles with chezmoi
+5. Changes the default shell to Homebrew's zsh
+6. Clones TPM (tmux plugin manager)
+7. Installs Flutter to `~/.local/share/flutter`
 
 After install, restart your terminal or run `exec zsh`. Tmux plugins install automatically on first launch.
 
@@ -61,13 +62,22 @@ Save edited live files back to the repo (machine → repo):
 ./save.sh ~/.config/tmux/tmux.conf
 ```
 
-After saving, commit and push the changes.
+`./save.sh` commits and pushes managed changes automatically, without prompting or force-pushing. It does not stage unrelated repository files. If there are staged changes, unpushed commits, or a push failure, it stops and reports the problem.
+
+To sync this repository and both private dotfiles repositories from anywhere, use the installed `dotfiles-sync` command:
+
+```bash
+dotfiles-sync save   # re-add managed files, commit, and push each repo
+dotfiles-sync apply  # fast-forward and apply each repo (no package installs)
+```
+
+The personal repo is found through `~/memos/personal`; the work repo is included when `~/memos/private` exists. These shortcuts are created by applying their respective private dotfiles. `save` pushes without prompting, but never force-pushes. All included repositories must be clean and have no unpushed commits before syncing; other work (including private memos) is not staged or published. Failures stop the command and are reported, so if one push succeeds and another fails, retry after resolving the failure.
 
 ---
 
 ## 📦 Dependencies
 
-All packages are managed via Homebrew and declared in `Brewfile`. Running `./apply.sh` (or `brew bundle`) will install/sync them.
+Homebrew packages are declared in `Brewfile`; Cargo packages (currently Ortie, the OAuth token helper for Himalaya) are declared in `CargoPackages`, one crate per line. Running `./apply.sh` installs both lists; `brew bundle` alone installs only the Brewfile. Use `./apply.sh --no-brew` to skip package installs.
 
 **Notable CLI tools:** fzf, fd, bat, ripgrep, eza, zoxide, lazygit, uv, tldr, yazi, age, rbw
 

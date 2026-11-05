@@ -23,11 +23,12 @@ for arg in "$@"; do
 done
 
 echo "Pulling latest changes..."
-git -C "$SCRIPT_DIR" pull
+git -C "$SCRIPT_DIR" pull --ff-only || exit 1
 
 if [ "$SKIP_BREW" = false ]; then
   echo "Updating packages..."
-  brew bundle --file="$SCRIPT_DIR/Brewfile"
+  brew bundle --file="$SCRIPT_DIR/Brewfile" || exit 1
+  bash "$SCRIPT_DIR/install-cargo-packages.sh" || exit 1
 fi
 
 echo "Applying dotfiles with chezmoi..."

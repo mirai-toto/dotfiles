@@ -33,7 +33,8 @@ ensure_local_bin() {
 
 install_utilities() {
   echo "Installing utilities..."
-  brew bundle --file="$SCRIPT_DIR/Brewfile"
+  brew bundle --file="$SCRIPT_DIR/Brewfile" || return 1
+  bash "$SCRIPT_DIR/install-cargo-packages.sh"
 }
 
 change_default_shell_to_zsh() {
