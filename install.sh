@@ -37,6 +37,12 @@ install_utilities() {
   bash "$SCRIPT_DIR/install-cargo-packages.sh"
 }
 
+setup_opencode_plugins() {
+  for plugin in opencode-skills-tui github:mirai-toto/opencode-gitlab-pipelines; do
+    opencode plugin add "$plugin" || return 1
+  done
+}
+
 change_default_shell_to_zsh() {
   if [ -x "$(brew --prefix)/bin/zsh" ]; then
     echo "Changing default shell to Homebrew's Zsh..."
@@ -106,6 +112,7 @@ install_homebrew
 ensure_local_bin
 install_utilities
 apply_dotfiles
+setup_opencode_plugins || exit 1
 change_default_shell_to_zsh
 setup_tmux_plugin_manager
 install_flutter

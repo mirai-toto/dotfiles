@@ -1,7 +1,7 @@
 #!/bin/bash
 # Deploy dotfiles from the repo to the machine (repo → machine).
 # Run this after pulling changes or editing files in ~/dotfiles directly.
-# Does: git pull → brew bundle → chezmoi apply
+# Does: git pull → brew bundle → chezmoi apply → OpenCode plugin update
 #
 # Usage: ./apply.sh [-n|--no-brew]
 
@@ -33,5 +33,6 @@ fi
 
 echo "Applying dotfiles with chezmoi..."
 chezmoi apply --source "$SCRIPT_DIR"
+opencode plugin update || exit 1
 
 echo "Done."

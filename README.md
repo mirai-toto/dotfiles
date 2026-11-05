@@ -16,7 +16,7 @@ This repo sets up:
 
 ## ⚠️ After install
 
-Run [dotfiles-private](https://github.com/mirai-toto/dotfiles-private) after this to deploy secrets and git identity (`~/.gitconfig.local`, `~/.gitconfig.work`).
+Run the [personal dotfiles-private](https://github.com/mirai-toto/dotfiles-private) after this for personal settings. Work-only settings belong in the separate work `dotfiles-private` repository.
 
 ---
 
@@ -41,6 +41,7 @@ cd dotfiles
 5. Changes the default shell to Homebrew's zsh
 6. Clones TPM (tmux plugin manager)
 7. Installs Flutter to `~/.local/share/flutter`
+8. Installs the shared OpenCode plugins (Skills and GitLab Pipelines)
 
 After install, restart your terminal or run `exec zsh`. Tmux plugins install automatically on first launch.
 
@@ -78,6 +79,8 @@ The personal repo is found through `~/memos/personal`; the work repo is included
 ## 📦 Dependencies
 
 Homebrew packages are declared in `Brewfile`; Cargo packages (currently Ortie, the OAuth token helper for Himalaya) are declared in `CargoPackages`, one crate per line. Running `./apply.sh` installs both lists; `brew bundle` alone installs only the Brewfile. Use `./apply.sh --no-brew` to skip package installs.
+
+`./install.sh` installs Skills and GitLab Pipelines. `./apply.sh` updates installed OpenCode plugins, including when run with `--no-brew`. Work-only OpenCode settings stay in the work private repo.
 
 **Notable CLI tools:** fzf, fd, bat, ripgrep, eza, zoxide, lazygit, uv, tldr, yazi, age, rbw
 
@@ -163,10 +166,12 @@ Scripts deployed to `~/.local/bin/` with execute permissions:
 
 ## 🔐 Private dotfiles
 
-Secrets and git identity are managed separately in [dotfiles-private](https://github.com/mirai-toto/dotfiles-private), encrypted with [age](https://age-encryption.org) and stored in [Bitwarden](https://bitwarden.com). See that repo for setup instructions.
+There are three repositories: this **public/generic `dotfiles`** for shared tooling (no secrets), **personal `dotfiles-private`** for personal settings and secrets, and **work `dotfiles-private`** for work-only settings and secrets. The private repos encrypt sensitive files with [age](https://age-encryption.org); see each repo for setup instructions.
+
+**Not migrated yet:** Both private repos currently manage `~/.secrets` and `~/.gitconfig.local`. Applying one can overwrite the other's files; saving both can copy work credentials into the personal repo even though the files are encrypted. The intended secrets split is `~/.secrets.personal` and `~/.secrets.work`, with separate loading rules. Do not schedule unattended `dotfiles-sync save` or `apply` until the overlapping files and loading rules are resolved and verified.
 
 ---
 
 ## 👤 Git identity
 
-Personal (`~/.gitconfig.local`) and work (`~/.gitconfig.work`) identities are managed in [dotfiles-private](https://github.com/mirai-toto/dotfiles-private), deployed encrypted via chezmoi. `~/.gitconfig.work` is applied automatically by git when inside `~/Work/`.
+Personal identity belongs in personal `dotfiles-private`; work identity belongs in work `dotfiles-private`. Currently both repos also manage `~/.gitconfig.local`, so its ownership must be resolved before unattended apply. Git uses `~/.gitconfig.work` inside `~/Work/` via `includeIf`.
