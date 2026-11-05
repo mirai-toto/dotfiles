@@ -63,6 +63,15 @@ change_default_shell_to_zsh() {
 
 apply_dotfiles() {
   echo "Applying dotfiles with chezmoi..."
+  # Older checkouts may retain empty, untracked directories that chezmoi would manage.
+  for old_dir in dot_claude dot_config/ai dot_config/opencode dot_config dot_local/share/glab-failed-logs dot_local/share dot_local; do
+    if [ -d "$SCRIPT_DIR/$old_dir" ]; then
+      rmdir "$SCRIPT_DIR/$old_dir" 2>/dev/null || {
+        echo "Obsolete source directory is not empty: $SCRIPT_DIR/$old_dir" >&2
+        return 1
+      }
+    fi
+  done
   mkdir -p "$HOME/.config/chezmoi"
   cat >"$HOME/.config/chezmoi/chezmoi.toml" <<EOF
 [chezmoi]
@@ -111,7 +120,7 @@ print_completion_message() {
 install_homebrew
 ensure_local_bin
 install_utilities
-apply_dotfiles
+apply_dotfiles || exit 1
 setup_opencode_plugins || exit 1
 change_default_shell_to_zsh
 setup_tmux_plugin_manager
