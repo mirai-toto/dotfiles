@@ -68,10 +68,10 @@ To sync this repository and both private dotfiles repositories from anywhere, us
 
 ```bash
 dotfiles-sync save   # re-add managed files, commit, and push each repo
-dotfiles-sync apply  # fast-forward and apply each repo (no package installs)
+dotfiles-sync apply  # each repo pulls and applies (no package installs)
 ```
 
-The personal repo is found through `~/memos/personal`; the work repo is included when `~/memos/private` exists. These shortcuts are created by applying their respective private dotfiles. `save` pushes without prompting, but never force-pushes. All included repositories must be clean and have no unpushed commits before syncing; other work (including private memos) is not staged or published. Failures stop the command and are reported, so if one push succeeds and another fails, retry after resolving the failure.
+The personal repo is found through `~/memos/personal`; the work repo is included when `~/memos/private` exists. These shortcuts are created by applying their respective private dotfiles. The wrapper simply runs each repo's `save.sh` or `apply.sh` in order. Each `save.sh` pushes without prompting or force-pushing and stages only chezmoi-managed files. Failures stop the command, so earlier repos may already have been pushed when a later repo fails.
 
 ---
 

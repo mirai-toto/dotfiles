@@ -1,114 +1,49 @@
 #!/bin/bash
-# Save or apply public, personal, and (when installed) work dotfiles.
+# Run the existing save/apply scripts in each installed dotfiles repo.
 
 set -euo pipefail
 
-usage() {
-  echo "Usage: dotfiles-sync {save|apply}"
-}
+case "${1:-}" in
+save | apply) action=$1 ;;
+-h | --help) echo "Usage: dotfiles-sync {save|apply}"; exit 0 ;;
+*) echo "Usage: dotfiles-sync {save|apply}" >&2; exit 2 ;;
+esac
 
 if [ "$#" -ne 1 ]; then
-  usage >&2
+  echo "Usage: dotfiles-sync {save|apply}" >&2
   exit 2
 fi
 
-case "$1" in
-save | apply) action=$1 ;;
--h | --help) usage; exit 0 ;;
-*) usage >&2; exit 2 ;;
-esac
-
-public_config="$HOME/.config/chezmoi/chezmoi.toml"
-
-repo_from_config() {
-  local config=$1
-  local repo
-
-  if [ ! -f "$config" ]; then
-    echo "Missing chezmoi configuration: $config" >&2
-    return 1
-  fi
-
-  repo=$(sed -n 's/^[[:space:]]*sourceDir[[:space:]]*=[[:space:]]*"\([^"]*\)".*/\1/p' "$config" | head -n 1)
-  if [ -z "$repo" ] || ! git -C "$repo" rev-parse --show-toplevel >/dev/null 2>&1; then
-    echo "No Git source directory found in $config" >&2
-    return 1
-  fi
-  realpath "$repo"
-}
-
-repo_from_memos() {
-  local shortcut=$1
-  local repo
-
-  if [ ! -d "$shortcut" ]; then
-    echo "Missing dotfiles memo shortcut: $shortcut" >&2
-    return 1
-  fi
-
-  repo=$(dirname "$(realpath "$shortcut")")
-  if ! git -C "$repo" rev-parse --show-toplevel >/dev/null 2>&1; then
-    echo "No Git repository for $shortcut" >&2
-    return 1
-  fi
-  echo "$repo"
-}
-
-public_repo=$(repo_from_config "$public_config")
-personal_repo=$(repo_from_memos "$HOME/memos/personal")
-repos=("$public_repo" "$personal_repo")
-
-# The work layer is optional on personal-only machines.
-if [ -e "$HOME/memos/private" ] || [ -L "$HOME/memos/private" ]; then
-  work_repo=$(repo_from_memos "$HOME/memos/private")
-  repos+=("$work_repo")
-fi
-
-if [ "$public_repo" = "$personal_repo" ] ||
-  [ "${work_repo:-}" = "$public_repo" ] || [ "${work_repo:-}" = "$personal_repo" ]; then
-  echo "Dotfiles shortcuts point to the same repository." >&2
+# The public repo is recorded by install.sh; the private repos create these shortcuts on apply.
+config="$HOME/.config/chezmoi/chezmoi.toml"
+if [ ! -f "$config" ] || [ ! -d "$HOME/memos/personal" ]; then
+  echo "Install public and personal dotfiles before running dotfiles-sync." >&2
   exit 1
 fi
 
-ensure_clean() {
-  local repo=$1
-  if [ -n "$(git -C "$repo" status --porcelain)" ]; then
-    echo "Uncommitted changes in $repo; resolve them before syncing:" >&2
-    git -C "$repo" status --short >&2
-    return 1
-  fi
-}
-
-update_repo() {
-  local repo=$1
-  echo "Updating $repo..."
-  git -C "$repo" pull --ff-only
-}
-
-if [ "$action" = apply ]; then
-  for repo in "${repos[@]}"; do ensure_clean "$repo"; done
-  for repo in "${repos[@]}"; do update_repo "$repo"; done
-  bash "$public_repo/apply.sh" --no-brew
-  bash "$personal_repo/apply.sh"
-  if [ -n "${work_repo:-}" ]; then bash "$work_repo/apply.sh"; fi
-  exit 0
+public_repo=$(sed -n 's/^[[:space:]]*sourceDir[[:space:]]*=[[:space:]]*"\([^"]*\)".*/\1/p' "$config" | head -n 1)
+if [ -z "$public_repo" ] || [ ! -d "$public_repo" ]; then
+  echo "Public dotfiles sourceDir is missing or invalid in $config." >&2
+  exit 1
 fi
 
-# Check every repository before making changes or publishing any one of them.
-for repo in "${repos[@]}"; do ensure_clean "$repo"; done
-for repo in "${repos[@]}"; do update_repo "$repo"; done
+repos=("$public_repo" "$(dirname "$(realpath "$HOME/memos/personal")")")
+if [ -L "$HOME/memos/private" ]; then
+  if [ ! -d "$HOME/memos/private" ]; then
+    echo "Work dotfiles shortcut is broken: $HOME/memos/private" >&2
+    exit 1
+  fi
+  repos+=("$(dirname "$(realpath "$HOME/memos/private")")")
+fi
 
 for repo in "${repos[@]}"; do
-  if ! git -C "$repo" rev-parse --verify '@{upstream}' >/dev/null 2>&1; then
-    echo "No upstream branch configured in $repo; cannot safely push." >&2
-    exit 1
-  fi
-  if [ "$(git -C "$repo" rev-list --count '@{upstream}..HEAD')" -ne 0 ]; then
-    echo "Unpushed commits in $repo; resolve them before syncing." >&2
-    exit 1
+  if [ "$action" = save ]; then
+    bash "$repo/save.sh"
+  else
+    if [ "$repo" = "$public_repo" ]; then
+      bash "$repo/apply.sh" --no-brew
+    else
+      bash "$repo/apply.sh"
+    fi
   fi
 done
-
-bash "$public_repo/save.sh"
-bash "$personal_repo/save.sh"
-if [ -n "${work_repo:-}" ]; then bash "$work_repo/save.sh"; fi
