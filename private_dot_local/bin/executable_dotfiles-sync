@@ -41,9 +41,11 @@ registered_repo_path() {
 }
 
 run_action() {
-  local repo=$1 action=$2
+  local repo=$1 action=$2 public_repo=$3
   if [ "$action" = save ]; then
     bash "$repo/save.sh"
+  elif [ "$repo" = "$public_repo" ]; then
+    bash "$repo/apply.sh" --no-brew
   else
     bash "$repo/apply.sh"
   fi
@@ -72,7 +74,7 @@ main() {
   done
 
   for repo in "${repos[@]}"; do
-    run_action "$repo" "$action"
+    run_action "$repo" "$action" "$public_repo"
   done
 }
 
