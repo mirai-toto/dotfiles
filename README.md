@@ -49,7 +49,7 @@ Normal shells source readable `*.zsh` hooks in `~/.config/dotfiles/private-shell
 
 ### Keeping up to date
 
-Pull and apply latest changes (repo → machine):
+Pull and apply latest changes (repo → machine, without installing packages):
 
 ```bash
 ./apply.sh
@@ -80,9 +80,9 @@ Each private installer registers its checkout as a symlink under `~/.config/dotf
 
 ## 📦 Dependencies
 
-Homebrew packages are declared in `Brewfile`; Cargo packages (currently Ortie, the OAuth token helper for Himalaya) are declared in `CargoPackages`, one crate per line. Running `./apply.sh` installs both lists; `brew bundle` alone installs only the Brewfile. Use `./apply.sh --no-brew` to skip package installs.
+Homebrew packages are declared in `Brewfile`; Cargo packages (currently Ortie, the OAuth token helper for Himalaya) are declared in `CargoPackages`, one crate per line. Running `./install.sh` installs both lists; `./apply.sh` only pulls and applies dotfiles and updates OpenCode plugins.
 
-`./install.sh` installs Skills and GitLab Pipelines. `./apply.sh` updates installed OpenCode plugins, including when run with `--no-brew`. Private OpenCode settings belong to their respective private profiles.
+`./install.sh` installs Skills and GitLab Pipelines. `./apply.sh` updates installed OpenCode plugins. Private OpenCode settings belong to their respective private profiles.
 
 **Notable CLI tools:** fzf, fd, bat, ripgrep, eza, zoxide, lazygit, uv, tldr, yazi, age, rbw
 

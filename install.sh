@@ -119,7 +119,7 @@ print_completion_message() {
 # Main
 install_homebrew
 ensure_local_bin
-install_utilities
+install_utilities || exit 1
 apply_dotfiles || exit 1
 setup_opencode_plugins || exit 1
 change_default_shell_to_zsh
