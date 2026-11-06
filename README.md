@@ -74,9 +74,9 @@ dotfiles-sync save   # re-add managed files, commit, and push each repo
 dotfiles-sync apply  # each repo pulls and applies (no package installs)
 ```
 
-Each private installer registers its checkout as a symlink under `~/.config/dotfiles/profiles.d/` (for example, `foo -> /path/to/foo-repo`). The wrapper scans those symlinks and runs each repo's `save.sh` or `apply.sh`. It does not depend on memo shortcuts or chezmoi profile configs. Each `save.sh` pushes without prompting or force-pushing and stages only chezmoi-managed files. Failures stop the command, so earlier repos may already have been pushed when a later repo fails.
+Each private installer registers its checkout as a symlink under `~/.config/dotfiles/profiles.d/` (for example, `foo -> /path/to/foo-repo`). The wrapper scans those symlinks and runs each repo's `save.sh` or `apply.sh`. It does not depend on memo shortcuts or chezmoi profile configs. Each `save.sh` pushes without prompting or force-pushing and stages only chezmoi-managed files, including private memo files. Failures stop the command, so earlier repos may already have been pushed when a later repo fails.
 
-Zsh completes `dotfiles-sync` with `save` and `apply`. An optional systemd user timer can run `save` followed by `apply` two minutes after the user manager starts and daily at noon. **It is installed but not enabled automatically:** unattended `save` commits and pushes live changes, so first publish migration commits, verify private profiles in a fresh shell, and check that managed destinations do not overlap. To run at WSL boot rather than only after login, enable user lingering; then enable the timer:
+Zsh completes `dotfiles-sync` with `save` and `apply`. An optional systemd user timer can run `save` followed by `apply` two minutes after the user manager starts and every three hours thereafter. **It is installed but not enabled automatically:** unattended `save` commits and pushes live changes, so first publish migration commits, verify private profiles in a fresh shell, and check that managed destinations do not overlap. To run at WSL boot rather than only after login, enable user lingering; then enable the timer:
 
 ```bash
 loginctl enable-linger "$USER"
