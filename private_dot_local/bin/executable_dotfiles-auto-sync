@@ -1,0 +1,15 @@
+#!/bin/bash
+# Run one unattended save/apply cycle; never overlap another cycle.
+set -euo pipefail
+umask 077
+
+runtime_dir=${XDG_RUNTIME_DIR:?Run via the systemd user service}
+exec 9>"$runtime_dir/dotfiles-auto-sync.lock"
+if ! flock -n 9; then
+  echo "A dotfiles sync is already running; skipping this cycle."
+  exit 0
+fi
+
+export GIT_TERMINAL_PROMPT=0
+"$HOME/.local/bin/dotfiles-sync" save
+"$HOME/.local/bin/dotfiles-sync" apply

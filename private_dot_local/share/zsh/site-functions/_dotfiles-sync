@@ -1,0 +1,3 @@
+#compdef dotfiles-sync
+
+_arguments '1:action:(save apply)'

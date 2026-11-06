@@ -1,0 +1,10 @@
+[Unit]
+Description=Sync dotfiles after WSL startup and daily
+
+[Timer]
+OnStartupSec=2min
+OnCalendar=*-*-* 12:00:00
+Unit=dotfiles-auto-sync.service
+
+[Install]
+WantedBy=timers.target

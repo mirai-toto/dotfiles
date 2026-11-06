@@ -1,0 +1,8 @@
+[Unit]
+Description=Save and apply registered dotfiles profiles
+
+[Service]
+Type=oneshot
+ExecStart=%h/.local/bin/dotfiles-auto-sync
+StandardInput=null
+TimeoutStartSec=15min

@@ -76,6 +76,16 @@ dotfiles-sync apply  # each repo pulls and applies (no package installs)
 
 Each private installer registers its checkout as a symlink under `~/.config/dotfiles/profiles.d/` (for example, `foo -> /path/to/foo-repo`). The wrapper scans those symlinks and runs each repo's `save.sh` or `apply.sh`. It does not depend on memo shortcuts or chezmoi profile configs. Each `save.sh` pushes without prompting or force-pushing and stages only chezmoi-managed files. Failures stop the command, so earlier repos may already have been pushed when a later repo fails.
 
+Zsh completes `dotfiles-sync` with `save` and `apply`. An optional systemd user timer can run `save` followed by `apply` two minutes after the user manager starts and daily at noon. **It is installed but not enabled automatically:** unattended `save` commits and pushes live changes, so first publish migration commits, verify private profiles in a fresh shell, and check that managed destinations do not overlap. To run at WSL boot rather than only after login, enable user lingering; then enable the timer:
+
+```bash
+loginctl enable-linger "$USER"
+systemctl --user enable --now dotfiles-auto-sync.timer
+systemctl --user list-timers dotfiles-auto-sync.timer
+```
+
+The service skips overlapping runs, fails rather than prompting Git for credentials, and stops before `apply` if `save` fails. Inspect failures with `journalctl --user -u dotfiles-auto-sync.service`; disable it with `systemctl --user disable --now dotfiles-auto-sync.timer`.
+
 ---
 
 ## 📦 Dependencies
