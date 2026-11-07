@@ -38,7 +38,7 @@ install_utilities() {
 }
 
 setup_opencode_plugins() {
-  for plugin in opencode-skills-tui github:mirai-toto/opencode-gitlab-pipelines; do
+  for plugin in opencode-skills-tui github:mirai-toto/opencode-gitlab-pipelines github:mirai-toto/opencode-memos; do
     opencode plugin add "$plugin" || return 1
   done
 }
