@@ -49,34 +49,34 @@ Normal shells source readable `*.zsh` hooks in `~/.config/dotfiles/private-shell
 
 ### Keeping up to date
 
-Pull and apply latest changes (repo → machine, without installing packages):
+Apply the current checkout (repo → machine, without pulling, pushing, or installing packages):
 
 ```bash
 ./apply.sh
 ```
 
-### Saving changes
+### Publishing changes
 
-Save edited live files back to the repo (machine → repo):
+Capture edited live files and publish them (machine → repo):
 
 ```bash
-./save.sh                        # re-add all changed managed files
-./save.sh ~/.zshrc               # re-add a specific file
-./save.sh ~/.config/tmux/tmux.conf
+./publish.sh                        # re-add all changed managed files
+./publish.sh ~/.zshrc               # re-add a specific file
+./publish.sh ~/.config/tmux/tmux.conf
 ```
 
-`./save.sh` commits and pushes managed changes automatically, without prompting or force-pushing. It does not stage unrelated repository files. If there are staged changes, unpushed commits, or a push failure, it stops and reports the problem.
+`./publish.sh` captures and commits managed changes, pulls with rebase, then pushes without prompting or force-pushing. It pulls even when there are no local changes; capturing first prevents a pull from making stale live files look like new edits. It does not stage or stash unrelated repository files. Existing staged changes or unpushed commits block publishing; pull conflicts, dirty unrelated files, and push failures stop the command. Resolve any interrupted rebase and publish the pending commit manually before retrying. To fetch updates without publishing live files, run `git pull --ff-only` yourself before `./apply.sh`.
 
 To sync this repository and all registered private dotfiles profiles from anywhere, use the installed `dotfiles-sync` command:
 
 ```bash
-dotfiles-sync save   # re-add managed files, commit, and push each repo
-dotfiles-sync apply  # each repo pulls and applies (no package installs)
+dotfiles-sync publish  # capture, commit, pull with rebase, and push each repo
+dotfiles-sync apply    # deploy each current checkout locally (no Git operations)
 ```
 
-Each private installer registers its checkout as a symlink under `~/.config/dotfiles/profiles.d/` (for example, `foo -> /path/to/foo-repo`). The wrapper scans those symlinks and runs each repo's `save.sh` or `apply.sh`. It does not depend on memo shortcuts or chezmoi profile configs. Each `save.sh` pushes without prompting or force-pushing and stages only chezmoi-managed files, including private memo files. Failures stop the command, so earlier repos may already have been pushed when a later repo fails.
+Each private installer registers its checkout as a symlink under `~/.config/dotfiles/profiles.d/` (for example, `foo -> /path/to/foo-repo`). The wrapper scans those symlinks and runs each repo's `publish.sh` or `apply.sh`. It does not depend on memo shortcuts or chezmoi profile configs. Each `publish.sh` stages only chezmoi-managed files, including private memo files. Failures stop the command, so earlier repos may already have been pushed when a later repo fails. Update all registered repos together before deploying the new wrapper; `save` and `save.sh` have been replaced by `publish` and `publish.sh`.
 
-Zsh completes `dotfiles-sync` with `save` and `apply`. An optional systemd user timer can run `save` followed by `apply` two minutes after the user manager starts and every three hours thereafter. **It is installed but not enabled automatically:** unattended `save` commits and pushes live changes, so first publish migration commits, verify private profiles in a fresh shell, and check that managed destinations do not overlap. To run at WSL boot rather than only after login, enable user lingering; then enable the timer:
+Zsh completes `dotfiles-sync` with `publish` and `apply`. An optional systemd user timer can run `publish` followed by `apply` two minutes after the user manager starts and every three hours thereafter. **It is installed but not enabled automatically:** unattended `publish` commits and pushes live changes, so first publish migration commits, verify private profiles in a fresh shell, and check that managed destinations do not overlap. To run at WSL boot rather than only after login, enable user lingering; then enable the timer:
 
 ```bash
 loginctl enable-linger "$USER"
@@ -84,7 +84,19 @@ systemctl --user enable --now dotfiles-auto-sync.timer
 systemctl --user list-timers dotfiles-auto-sync.timer
 ```
 
-The service skips overlapping runs, fails rather than prompting Git for credentials, and stops before `apply` if `save` fails. Inspect failures with `journalctl --user -u dotfiles-auto-sync.service`; disable it with `systemctl --user disable --now dotfiles-auto-sync.timer`.
+The service skips overlapping runs, fails rather than prompting Git for credentials, and stops before `apply` if `publish` fails. Inspect failures with `journalctl --user -u dotfiles-auto-sync.service`; disable it with `systemctl --user disable --now dotfiles-auto-sync.timer`.
+
+After updating all registered repos, deploy the wrapper and service files locally and reload systemd without starting a sync cycle:
+
+```bash
+chezmoi apply ~/.local/bin/dotfiles-sync ~/.local/bin/dotfiles-auto-sync \
+  ~/.local/share/zsh/site-functions/_dotfiles-sync \
+  ~/.config/systemd/user/dotfiles-auto-sync.service \
+  ~/.config/systemd/user/dotfiles-auto-sync.timer
+systemctl --user daemon-reload
+```
+
+Run isolated workflow checks with `bash tests/sync.sh /path/to/personal-dotfiles-private /path/to/work-dotfiles-private`. These tests mock Git and chezmoi; they do not publish or deploy live files.
 
 ---
 
@@ -180,7 +192,7 @@ Scripts deployed to `~/.local/bin/` with execute permissions:
 
 This **public `dotfiles`** repository provides shared tooling and contains no secrets. Optional private dotfiles repositories can use the [profile template](https://github.com/mirai-toto/dotfiles-private-template) to manage their own age-encrypted files and shell/Git integrations.
 
-Private profiles must have disjoint managed destinations. Verify their shell hooks and Git includes before enabling unattended `dotfiles-sync save` or `apply`.
+Private profiles must have disjoint managed destinations. Verify their shell hooks and Git includes before enabling unattended `dotfiles-sync publish` or `apply`.
 
 ---
 

@@ -1,5 +1,5 @@
 [Unit]
-Description=Save and apply registered dotfiles profiles
+Description=Publish and apply registered dotfiles profiles
 
 [Service]
 Type=oneshot

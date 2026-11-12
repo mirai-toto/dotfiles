@@ -9,7 +9,8 @@ CargoPackages
 install.sh
 install-cargo-packages.sh
 apply.sh
-save.sh
+publish.sh
+tests/
 README.md
 themes/
 Dockerfile

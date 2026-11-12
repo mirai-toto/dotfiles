@@ -1,5 +1,5 @@
 #!/bin/bash
-# Run one unattended save/apply cycle; never overlap another cycle.
+# Run one unattended publish/apply cycle; never overlap another cycle.
 set -euo pipefail
 umask 077
 
@@ -11,5 +11,5 @@ if ! flock -n 9; then
 fi
 
 export GIT_TERMINAL_PROMPT=0
-"$HOME/.local/bin/dotfiles-sync" save
+"$HOME/.local/bin/dotfiles-sync" publish
 "$HOME/.local/bin/dotfiles-sync" apply

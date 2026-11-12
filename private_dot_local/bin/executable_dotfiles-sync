@@ -1,10 +1,10 @@
 #!/bin/bash
-# Run the existing save/apply scripts in each installed dotfiles repo.
+# Run publish/apply scripts in each installed dotfiles repo.
 
 set -euo pipefail
 
 usage() {
-  echo "Usage: dotfiles-sync {save|apply}"
+  echo "Usage: dotfiles-sync {publish|apply}"
 }
 
 public_repo_path() {
@@ -42,18 +42,14 @@ registered_repo_path() {
 
 run_action() {
   local repo=$1 action=$2
-  if [ "$action" = save ]; then
-    bash "$repo/save.sh"
-  else
-    bash "$repo/apply.sh"
-  fi
+  bash "$repo/$action.sh"
 }
 
 main() {
   local action registration repo public_repo
   local -a repos
   case "${1:-}" in
-  save | apply) action=$1 ;;
+  publish | apply) action=$1 ;;
   -h | --help) usage; return 0 ;;
   *) usage >&2; return 2 ;;
   esac
