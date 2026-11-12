@@ -52,6 +52,30 @@ list-directory() {
 }
 zle -N list-directory
 bindkey '\el' list-directory         # [Alt-l] - list the current directory
+
+open-lazygit() {
+  zle -I
+  lazygit
+}
+zle -N open-lazygit
+bindkey '\eg' open-lazygit            # [Alt-g] - open lazygit
+
+open-fuzzy-file() {
+  local selected_file
+  zle -I
+  selected_file=$(fd --hidden --type file --exclude .git | fzf-tmux -p --reverse) || return
+  [[ -n "$selected_file" ]] && nvim -- "$selected_file"
+}
+zle -N open-fuzzy-file
+bindkey '\ef' open-fuzzy-file         # [Alt-f] - pick a file to edit in Neovim
+
+show-git-status() {
+  zle -I
+  git status --short
+}
+zle -N show-git-status
+bindkey '\es' show-git-status         # [Alt-s] - show short Git status
+
 bindkey '^r' history-incremental-search-backward # [Ctrl-r] - Search backward incrementally
 bindkey '\^K' kill-line                            # [Ctrl-k] - Delete line forward from the cursor 
  
