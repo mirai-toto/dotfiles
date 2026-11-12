@@ -46,7 +46,12 @@ bindkey ' ' magic-space # [Space] - don't do history expansion
 
 # Region and line editing
 bindkey '\ew' kill-region            # [Esc-w] - Kill from the cursor to the mark
-bindkey '\el' 'ls\n'                 # [Esc-l] - run command: ls
+list-directory() {
+  zle -I
+  eza -la --git --icons=always .
+}
+zle -N list-directory
+bindkey '\el' list-directory         # [Alt-l] - list the current directory
 bindkey '^r' history-incremental-search-backward # [Ctrl-r] - Search backward incrementally
 bindkey '\^K' kill-line                            # [Ctrl-k] - Delete line forward from the cursor 
  
