@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+read -r -p 'Ortie account name: ' account
+if [[ -z $account ]]; then
+    printf 'Account name is required.\n' >&2
+    exit 1
+fi
+
+printf 'Starting authorization for %s...\n' "$account"
+if ! command -v script >/dev/null; then
+    printf 'The script command is required to open the browser through Ortie.\n' >&2
+    exit 1
+fi
+# Give Ortie a terminal even while capturing its state and PKCE output.
+if ! request=$(ORTIE_CONNECT_ACCOUNT="$account" script -q -e -c 'ortie auth get -a "$ORTIE_CONNECT_ACCOUNT"' /dev/null </dev/null 2>&1); then
+    printf 'Could not start Ortie authorization for %s.\n' "$account" >&2
+    exit 1
+fi
+
+if [[ $request != *'Once authorized, copy the URL'* ]]; then
+    printf 'Ortie completed authorization without a manual redirect.\n'
+    exit 0
+fi
+
+if [[ $request =~ -\ state:\ ([^[:space:]]+) ]]; then
+    state=${BASH_REMATCH[1]}
+else
+    printf 'Could not find the authorization state in Ortie output.\n' >&2
+    exit 1
+fi
+if [[ $request =~ -\ pkce:\ ([^[:space:]]+) ]]; then
+    pkce=${BASH_REMATCH[1]}
+else
+    printf 'Could not find the PKCE verifier in Ortie output.\n' >&2
+    exit 1
+fi
+
+printf 'After signing in, copy the full URL from the browser address bar.\n'
+read -r -s -p 'Redirect URL (hidden): ' redirect_url
+printf '\n'
+if [[ $redirect_url != https://localhost/\?* || $redirect_url != *"state=$state"* ]]; then
+    printf 'Redirect URL is missing or does not match this authorization request.\n' >&2
+    exit 1
+fi
+
+ortie auth resume -a "$account" --state="$state" --pkce="$pkce" "$redirect_url" >/dev/null
+printf 'Connected %s.\n' "$account"
