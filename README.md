@@ -189,6 +189,19 @@ Scripts deployed to `~/.local/bin/` with execute permissions:
 
 ---
 
+## ✉️ Mail (Ortie + Himalaya)
+
+Apply your personal private dotfiles profile to install the mail account configs, then run `ortie-connect` and enter the account name. Sign in through the browser and paste its full redirect URL when prompted. Repeat for each account on a new machine; OAuth tokens stay in the local keyring.
+
+For example, with an account named `main`:
+
+```sh
+himalaya envelope list -a main
+himalaya message read -a main MESSAGE_ID
+```
+
+---
+
 ## 🔐 Private dotfiles
 
 This **public `dotfiles`** repository provides shared tooling and contains no secrets. Optional private dotfiles repositories can use the [profile template](https://github.com/mirai-toto/dotfiles-private-template) to manage their own age-encrypted files and shell/Git integrations.
