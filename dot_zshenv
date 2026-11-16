@@ -1,0 +1,5 @@
+# Load every profile's environment in every Zsh process, including non-interactive shells.
+for secret_env in "$HOME"/.secrets/**/env.sh(ND); do
+  [[ -f "$secret_env" && -r "$secret_env" ]] && source "$secret_env"
+done
+unset secret_env

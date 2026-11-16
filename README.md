@@ -45,7 +45,7 @@ cd dotfiles
 
 After install, restart your terminal or run `exec zsh`. Tmux plugins install automatically on first launch.
 
-Normal shells source readable `*.zsh` hooks in `~/.config/dotfiles/private-shell.d/` in filename order. Each installed private profile owns its own hook and decides whether and how to load secrets. Without private hooks, public dotfiles load no secrets.
+Every Zsh process sources readable `env.sh` files recursively under `~/.secrets/` from `~/.zshenv`; exported variables from every profile are available in all shells, including non-interactive ones. Keep each credential in its appropriate private profile even though runtime loading is not profile-scoped. Interactive shells also source readable `*.zsh` hooks in `~/.config/dotfiles/private-shell.d/` in filename order.
 
 ### Keeping up to date
 
