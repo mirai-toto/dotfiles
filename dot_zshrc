@@ -28,8 +28,8 @@ export FZF_ALT_C_OPTS="$FZF_OPTS_WITH_BATCAT_AND_TREE"
 export FZF_TMUX_OPTS=" -p90%,70% "
 
 #### Configuration ####
-export USER_WEATHER_LOCATION="${USER_WEATHER_LOCATION:-}"  # wttr.in location (e.g. "Paris", "CDG", "48.8566,2.3522")
-export GITLAB_URL="${GITLAB_URL:-}"
+export USER_WEATHER_LOCATION=""  # wttr.in location (e.g. "Paris", "CDG", "48.8566,2.3522")
+export GITLAB_URL=""
 
 #### Optional local shell hooks ####
 for private_hook in "$HOME"/.config/dotfiles/private-shell.d/*.zsh(N); do
