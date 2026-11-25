@@ -76,6 +76,13 @@ show-git-status() {
 zle -N show-git-status
 bindkey '\es' show-git-status         # [Alt-s] - show short Git status
 
+copy-current-directory() {
+  zle -I
+  pwd | cbi
+}
+zle -N copy-current-directory
+bindkey '\ey' copy-current-directory # [Alt-y] - copy the current directory to the clipboard
+
 bindkey '^r' history-incremental-search-backward # [Ctrl-r] - Search backward incrementally
 bindkey '\^K' kill-line                            # [Ctrl-k] - Delete line forward from the cursor 
  

@@ -68,11 +68,11 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-#### Key Bindings ####
-source ~/.key-bindings.zsh
-
 #### Aliases ####
 source ~/.aliases.sh
+
+#### Key Bindings ####
+source ~/.key-bindings.zsh
 
 #### History ####
 HISTSIZE=5000
